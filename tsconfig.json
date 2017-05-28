@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "outDir": "dist",
+        "module": "commonjs",
+        "sourceMap": true,
+        "preserveConstEnums": true,
+        "noUnusedLocals": true,
+        "experimentalDecorators": true,
+        "declaration": false,
+        "rootDir": "."
+    },
+    "include": [
+        "src",
+        "test"
+    ]
+}
