@@ -26,10 +26,3 @@ script:
 after_success:
   - npm run report
   - bash <(curl -s https://codecov.io/bash)
-  - npm install -g codeclimate-test-reporter
-  - $CODECLIMATE_REPO_TOKEN codeclimate-test-reporter < ./coverage/lcov.info
-  - cp package.json dist/src/package.json
-  - export DOCKER_TAG=$TRAVIS_BRANCH-$TRAVIS_COMMIT
-  - docker build -t hkustvislab/vismooc-web-server:$TRAVIS_BRANCH -t hkustvislab/vismooc-web-server:$DOCKER_TAG .
-  - docker login -u="$DOCKER_EMAIL" -p="$DOCKER_PASSWORD"
-  - docker push hkustvislab/vismooc-web-server
