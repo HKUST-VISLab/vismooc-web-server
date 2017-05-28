@@ -1,7 +1,7 @@
 sudo: required
 language: node_js
 node_js:
-  - "6.9.1"
+  - "6"
 
 notifications:
   email:
@@ -15,9 +15,7 @@ notifications:
 
 services:
   - mongodb
-  - docker
   - redis-server
-  - mysql
 
 before_script:
   - npm install
