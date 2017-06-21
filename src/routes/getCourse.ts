@@ -1,7 +1,7 @@
 import * as crypto from 'crypto';
 import * as Router from 'koa-router';
 // import * as Data from "../controllers/data";
-// import { OAuthReferer } from '../routes/oauth';
+import { OAuthReferer } from '../routes/oauth';
 
 function courseIdOf(query: any) {
     const id: string = query.courseId;
@@ -58,7 +58,7 @@ const getCourseRouters: Router = new Router()
         }
         console.info('in get course list');
 
-        const selectedCourseId = getCourseIdFromReferer(null);
+        const selectedCourseId = getCourseIdFromReferer(OAuthReferer);
         let permissions = {};
         if (ctx.session && ctx.session.passport && ctx.session.passport.user) {
             ({ permissions = {} } = ctx.session.passport.user);

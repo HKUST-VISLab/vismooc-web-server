@@ -1,7 +1,7 @@
 sudo: required
 language: node_js
 node_js:
-  - "6"
+  - "6.9.1"
 
 notifications:
   email:
@@ -15,13 +15,19 @@ notifications:
 
 services:
   - mongodb
+  - docker
   - redis-server
+  - mysql
 
 before_script:
   - npm install
 script:
   - npm run test
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  - npm run report
   - npm install -g codeclimate-test-reporter
   - codeclimate-test-reporter < ./coverage/lcov.info
+  - export DOCKER_TAG=$TRAVIS_BRANCH-$TRAVIS_COMMIT
+  - docker build -t hkustvislab/vismooc-web-server:$TRAVIS_BRANCH -t hkustvislab/vismooc-web-server:$DOCKER_TAG .
+  - docker login -u="$DOCKER_EMAIL" -p="$DOCKER_PASSWORD"
+  - docker push hkustvislab/vismooc-web-server
