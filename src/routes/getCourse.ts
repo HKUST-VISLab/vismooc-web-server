@@ -58,7 +58,7 @@ const getCourseRouters: Router = new Router()
         }
         console.info('in get course list');
 
-        const selectedCourseId = getCourseIdFromReferer(OAuthReferer);
+        const selectedCourseId = getCourseIdFromReferer(null);
         let permissions = {};
         if (ctx.session && ctx.session.passport && ctx.session.passport.user) {
             ({ permissions = {} } = ctx.session.passport.user);

@@ -8,4 +8,3 @@ export {
     SuccessAction,
 } from './base';
 export { SessionStrategy } from './session';
-export { HKMOOCStrategy } from './HKMOOCStrategy';
