@@ -15,7 +15,6 @@ export let CONFIG = {
         host: 'localhost',
     },
 };
-
 export async function initAll() {
     const configFilePath = process.argv.slice(0)[2];
     if (configFilePath) {

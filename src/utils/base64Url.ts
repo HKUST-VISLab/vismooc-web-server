@@ -15,7 +15,7 @@ export function encode(str: string): string {
 }
 
 export function decode(str: string): string {
-    return new Buffer(this.unescape(str), 'base64').toString();
+    return new Buffer(unescape(str), 'base64').toString();
 }
 
 export default {

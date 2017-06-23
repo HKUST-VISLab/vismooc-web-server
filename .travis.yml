@@ -1,7 +1,7 @@
 sudo: required
 language: node_js
 node_js:
-  - "6"
+  - "6.9.1"
 
 notifications:
   email:
@@ -15,13 +15,15 @@ notifications:
 
 services:
   - mongodb
+  - docker
   - redis-server
+  - mysql
 
 before_script:
   - npm install
 script:
   - npm run test
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  - npm run report
   - npm install -g codeclimate-test-reporter
   - codeclimate-test-reporter < ./coverage/lcov.info

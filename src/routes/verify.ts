@@ -12,7 +12,10 @@ const verifyRouter: Router = new Router()
     .get('/(.*)', async (ctx, next) => {
         console.info('in verify router');
         // to check whether the user login or not
-        if (!ctx.session.passport || !ctx.session.passport.user || !ctx.session.passport.user.permissions) {
+        const passport = ctx.session.passport;
+        const user = passport && passport.user;
+        const permissions = user && user.permissions;
+        if (!passport || !user || !permissions) {
             ctx.body = 'No Permission_1';
             return await next();
         }
@@ -20,7 +23,7 @@ const verifyRouter: Router = new Router()
         // to check whether the user has permission to fetch the data of this course
         const query = ctx.query;
         const courseId = courseIdOf(query);
-        if (courseId && !(courseId in ctx.session.passport.user.permissions)) {
+        if (courseId && permissions !== '*' && !(courseId in permissions)) {
             ctx.body = 'No Permission_2';
             return await next();
         }

@@ -1,7 +1,7 @@
 import * as crypto from 'crypto';
 import * as Router from 'koa-router';
 // import * as Data from "../controllers/data";
-// import { OAuthReferer } from '../routes/oauth';
+import { OAuthReferer } from '../routes/oauth';
 
 function courseIdOf(query: any) {
     const id: string = query.courseId;

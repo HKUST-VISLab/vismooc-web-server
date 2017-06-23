@@ -3,5 +3,6 @@ ADD ./dist/src /dist
 WORKDIR /dist
 COPY package.json .
 RUN npm install --production && npm install -g pm2
+COPY src/public ./public
 EXPOSE 9999
 CMD pm2-docker start index.js -- ../config/config.json
