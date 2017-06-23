@@ -6,7 +6,6 @@ import { DataController } from '../../src/controllers';
 import * as DataSchema from '../../src/database/dataSchema';
 import { MongoDatabase } from '../../src/database/mongo';
 import getCourseRouters from '../../src/routes/getCourse';
-import { OAuthReferer } from '../../src/routes/oauth';
 import { mongoContains } from '../testUtils';
 
 interface TestContext {
@@ -222,11 +221,6 @@ test('CourseRouter#getCourseList', async (t) => {
         'the length of output should be the same as groundTruth of mockUserData');
     t.deepEqual(output.coursesList, groundTruth, 'the course in output should be the same as groundTruth');
 
-    OAuthReferer = `course-v1:${courseIds[0]}/`;
-    res = await req.get('/getCourseList');
-    output = res.body;
-    t.deepEqual(output.selectedCourseId, courseIds[0],
-        'the selectedCourseId of outputs should be equal to the groundTruth');
 });
 
 test('CourseRouter#getDemographicInfo', async (t) => {

@@ -591,7 +591,7 @@ test('DataController#getSentimentById', async (t) => {
     let groundTruth = mockForumData.filter(d => d.courseId === courseId);
     t.true(Array.isArray(output), 'should return an array');
     t.is(output.length, groundTruth.length, 'the length of output should be the same as groundTruth of mockForumData');
-    console.info('sentimentTest', output, groundTruth);
+    // console.info('sentimentTest', output, groundTruth);
     for (let i = 0, len = output.length; i < len; ++i) {
         t.is(output[i].courseId, groundTruth[i].courseId,
             'the content of output should be the same as groundTruth of mockForumData',
