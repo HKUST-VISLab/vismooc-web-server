@@ -9,6 +9,7 @@ import session, {RedisStore} from './middlewares/session';
 import getCourseRouters from './routes/getCourse';
 import getForumRouters from './routes/getForum';
 import getVideoRouters from './routes/getVideo';
+import { CONFIG } from './init';
 
 declare module 'koa' {
     export interface BaseContext {
@@ -16,7 +17,7 @@ declare module 'koa' {
     }
 }
 
-export default function Server() {
+export default function Server(config: typeof CONFIG) {
     const app: Koa = new Koa();
     // data controller
     app.context.dataController = new DataController(DatabaseManager.Database);
@@ -31,5 +32,5 @@ export default function Server() {
     app.use(getCourseRouters.routes());
     app.use(getVideoRouters.routes());
     app.use(getForumRouters.routes());
-    return app;
+    return app.listen(config.port);
 }
