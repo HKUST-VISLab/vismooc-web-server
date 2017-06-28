@@ -1,12 +1,10 @@
-import { Redis, RedisOptions } from '../../../database/redis';
+import { Redis } from '../../../database/redis';
 import { Session } from '../index';
 import { BaseStore } from './base';
 
 export class RedisStore extends BaseStore {
-    private redis: Redis;
-    constructor(prefix: string, redisOptions: RedisOptions) {
+    constructor(prefix: string, private redis: Redis = new Redis()) {
         super(prefix);
-        this.redis = new Redis(redisOptions);
     }
 
     public async get(sid: string): Promise<Session> {
@@ -25,9 +23,5 @@ export class RedisStore extends BaseStore {
     public async destroy(sid: string): Promise<void> {
         sid = this.prefix + sid;
         await this.redis.del(sid);
-    }
-
-    public flushAll(){
-        this.redis.dropDatabase();
     }
 }

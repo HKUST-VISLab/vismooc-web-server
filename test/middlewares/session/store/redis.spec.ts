@@ -1,4 +1,5 @@
 import test from 'ava';
+import { Redis } from '../../../../src/database/redis';
 import { BaseStore, RedisStore, Session } from '../../../../src/middlewares/session';
 import { wait } from '../../../testUtils';
 
@@ -9,14 +10,16 @@ interface RedisStoreTestContext {
 
 let dbIdx = 11;
 test.beforeEach('new a RedisStore', (t) => {
+    const redis = new Redis({ db: dbIdx++ });
     t.context = {
-        store: new RedisStore(undefined, { db: dbIdx++ }),
+        redis,
+        store: new RedisStore(undefined, redis),
         sess: { cookie: { signed: true } },
     };
 });
 
 test.afterEach('flush db', async (t) => {
-    (t.context as RedisStoreTestContext).store.flushAll();
+    t.context.redis.flushAll();
 });
 
 test.serial('RedisStore#constructor', async (t) => {
