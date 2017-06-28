@@ -2,7 +2,7 @@ import test from 'ava';
 import * as Koa from 'koa';
 import * as nock from 'nock';
 import * as querystring from 'querystring';
-import { parse, resolve} from 'url';
+import { parse, resolve } from 'url';
 import {
     ActionType,
     // BaseAction,
@@ -67,7 +67,7 @@ test('BaseOAuth2Strategy#constructor', (t) => {
 });
 
 test('BaseOAuth2Strategy#constructor, that skipUserProfile is true', async (t) => {
-    const { clientId, authorizationURL, tokenURL, ctx} = t.context as TestContext;
+    const { clientId, authorizationURL, tokenURL, ctx } = t.context as TestContext;
     const accessToken = '2YotnFZFEjr1zCsicMWpAA';
     const refreshToken = 'tGzv3JOkF0XG5Qx2TlKWIA';
     const code = 'SplxlOBeZQQYbYS6WxSbIA';
@@ -94,7 +94,7 @@ test('BaseOAuth2Strategy#constructor, that skipUserProfile is true', async (t) =
         tokenURL,
         verify,
         true);
-    ctx.query  = { code };
+    ctx.query = { code };
     await t.throws(strategy.authenticate(ctx), 'profile is null', 'should throw an Error');
 });
 
@@ -127,21 +127,21 @@ test('BaseOAuth2Strategy#authenticate, that redirects to service provider with r
 });
 
 test('BaseOAuth2Strategy#authenticate, that redirects to service provider with redirect URI and scope',
-  async (t) => {
-    const { clientId, authorizationURL, tokenURL, verify, callbackURL, scope, ctx } = t.context as TestContext;
-    const strategy = new BaseOAuth2Strategy(clientId, authorizationURL, tokenURL, verify, undefined, undefined,
-        callbackURL, scope);
-    const res = await strategy.authenticate(ctx);
-    t.deepEqual(res.type, ActionType.REDIRECT, 'should be a redirect type');
-    const url = (res as RedirectAction).url;
-    const queryStr = querystring.stringify({
-        response_type: 'code',
-        redirect_uri: callbackURL,
-        scope,
-        client_id: clientId,
+    async (t) => {
+        const { clientId, authorizationURL, tokenURL, verify, callbackURL, scope, ctx } = t.context as TestContext;
+        const strategy = new BaseOAuth2Strategy(clientId, authorizationURL, tokenURL, verify, undefined, undefined,
+            callbackURL, scope);
+        const res = await strategy.authenticate(ctx);
+        t.deepEqual(res.type, ActionType.REDIRECT, 'should be a redirect type');
+        const url = (res as RedirectAction).url;
+        const queryStr = querystring.stringify({
+            response_type: 'code',
+            redirect_uri: callbackURL,
+            scope,
+            client_id: clientId,
+        });
+        t.deepEqual(url, `${authorizationURL}?${queryStr}`, 'should be redirect');
     });
-    t.deepEqual(url, `${authorizationURL}?${queryStr}`, 'should be redirect');
-});
 
 test('BaseOAuth2Strategy#authenticate, that redirects to service provider with scope option', async (t) => {
     const { clientId, authorizationURL, tokenURL, verify, callbackURL, ctx, scope } = t.context as TestContext;
@@ -348,7 +348,7 @@ test('BaseOAuth2Strategy#authenticate, that that was approved without redirect U
     ctx.query = { code };
     const res = await strategy.authenticate(ctx);
     t.deepEqual(res.type, ActionType.SUCCESS, 'should be a success type');
-    const {user: u , info: i} = (res as SuccessAction);
+    const { user: u, info: i } = (res as SuccessAction);
     t.deepEqual(u, user, 'should supply user');
     t.deepEqual(i, info, 'should supply info');
 });
@@ -394,7 +394,7 @@ test('BaseOAuth2Strategy#authenticate, that was approved without redirect URI', 
     ctx.query = { code };
     const res = await strategy.authenticate(ctx);
     t.deepEqual(res.type, ActionType.SUCCESS, 'should be success type');
-    const {user: u , info: i} = (res as SuccessAction);
+    const { user: u, info: i } = (res as SuccessAction);
     t.deepEqual(u, user, 'should supply user');
     t.deepEqual(i, info, 'should supply info');
 });
@@ -441,7 +441,7 @@ test('BaseOAuth2Strategy#authenticate, that was approved with redirect URI', asy
     ctx.query = { code };
     const res = await strategy.authenticate(ctx);
     t.deepEqual(res.type, ActionType.SUCCESS, 'should be success type');
-    const {user: u , info: i} = (res as SuccessAction);
+    const { user: u, info: i } = (res as SuccessAction);
     t.deepEqual(u, user, 'should supply user');
     t.deepEqual(i, info, 'should supply info');
 });
@@ -488,7 +488,7 @@ test('BaseOAuth2Strategy#authenticate, that was approved with redirect URI optio
     ctx.query = { code };
     const res = await strategy.authenticate(ctx, { callbackURL: `${callbackURL}/atl` });
     t.deepEqual(res.type, ActionType.SUCCESS, 'should be success type');
-    const {user: u , info: i} = (res as SuccessAction);
+    const { user: u, info: i } = (res as SuccessAction);
     t.deepEqual(u, user, 'should supply user');
     t.deepEqual(i, info, 'should supply info');
 });
@@ -541,7 +541,7 @@ test('BaseOAuth2Strategy#authenticate, that was approved with relative redirect 
     ctx.query = { code };
     const res = await strategy.authenticate(ctx, { callbackURL: relativeCallbackURL });
     t.deepEqual(res.type, ActionType.SUCCESS, 'should be success type');
-    const {user: u , info: i} = (res as SuccessAction);
+    const { user: u, info: i } = (res as SuccessAction);
     t.deepEqual(u, user, 'should supply user');
     t.deepEqual(i, info, 'should supply info');
 });
@@ -592,58 +592,58 @@ test('BaseOAuth2Strategy#authenticate, that was approved using verify callback t
     ctx.query = { code };
     const res = await strategy.authenticate(ctx);
     t.deepEqual(res.type, ActionType.SUCCESS, 'should be success type');
-    const {user: u , info: i} = (res as SuccessAction);
+    const { user: u, info: i } = (res as SuccessAction);
     t.deepEqual(u, user, 'should supply user');
     t.deepEqual(i, info, 'should supply info');
 });
 
 test('BaseOAuth2Strategy#authenticate, that was approved using sessionStore', async (t) => {
-        const { clientId, authorizationURL, tokenURL , ctx} = t.context as TestContext;
-        const code = 'SplxlOBeZQQYbYS6WxSbIA';
-        const accessToken = '2YotnFZFEjr1zCsicMWpAA';
-        const refreshToken = 'tGzv3JOkF0XG5Qx2TlKWIA';
-        const user = { id: '1234' };
-        const info = { message: 'Hello' };
-        const verify = (at: string, rt: string, params, profile: object) => {
-            if (at !== accessToken) {
-                throw new Error('incorrect accessToken argument');
-            }
-            if (rt !== refreshToken) {
-                throw new Error('incorrect refreshToken argument');
-            }
-            if (Object.keys(profile).length !== 0) {
-                throw new Error('incorrect profile argument');
-            }
-            return Promise.resolve({ user, info });
-        };
-        const strategy = new BaseOAuth2Strategy(
-            clientId,
-            authorizationURL,
-            tokenURL,
-            verify,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            true);
-        const uri = parse(tokenURL);
-        nock(`${uri.protocol}//${uri.host}`).post(uri.path)
-            .reply(200,  JSON.stringify({ access_token: accessToken, refresh_token: refreshToken }));
-        (ctx as any).session = {};
-        const firstRes = await strategy.authenticate(ctx);
-        t.deepEqual(firstRes.type, ActionType.REDIRECT, 'should be a redirect type');
-        const { url } = (firstRes as RedirectAction);
-        const state = parse(url, true).query.state;
-        ctx.query = { code , state};
-        const secondRes = await strategy.authenticate(ctx);
-        t.deepEqual(secondRes.type, ActionType.SUCCESS, 'should be a success type');
-        const {user: u , info: i} = (secondRes as SuccessAction);
-        t.deepEqual(u, user, 'should supply user');
-        t.deepEqual(i, info, 'should supply info');
-    });
+    const { clientId, authorizationURL, tokenURL, ctx } = t.context as TestContext;
+    const code = 'SplxlOBeZQQYbYS6WxSbIA';
+    const accessToken = '2YotnFZFEjr1zCsicMWpAA';
+    const refreshToken = 'tGzv3JOkF0XG5Qx2TlKWIA';
+    const user = { id: '1234' };
+    const info = { message: 'Hello' };
+    const verify = (at: string, rt: string, params, profile: object) => {
+        if (at !== accessToken) {
+            throw new Error('incorrect accessToken argument');
+        }
+        if (rt !== refreshToken) {
+            throw new Error('incorrect refreshToken argument');
+        }
+        if (Object.keys(profile).length !== 0) {
+            throw new Error('incorrect profile argument');
+        }
+        return Promise.resolve({ user, info });
+    };
+    const strategy = new BaseOAuth2Strategy(
+        clientId,
+        authorizationURL,
+        tokenURL,
+        verify,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        true);
+    const uri = parse(tokenURL);
+    nock(`${uri.protocol}//${uri.host}`).post(uri.path)
+        .reply(200, JSON.stringify({ access_token: accessToken, refresh_token: refreshToken }));
+    (ctx as any).session = {};
+    const firstRes = await strategy.authenticate(ctx);
+    t.deepEqual(firstRes.type, ActionType.REDIRECT, 'should be a redirect type');
+    const { url } = (firstRes as RedirectAction);
+    const state = parse(url, true).query.state;
+    ctx.query = { code, state };
+    const secondRes = await strategy.authenticate(ctx);
+    t.deepEqual(secondRes.type, ActionType.SUCCESS, 'should be a success type');
+    const { user: u, info: i } = (secondRes as SuccessAction);
+    t.deepEqual(u, user, 'should supply user');
+    t.deepEqual(i, info, 'should supply info');
+});
 
 test('BaseOAuth2Strategy#authenticate, that fails due to verify callback supplying false', async (t) => {
     const { clientId, authorizationURL, tokenURL, callbackURL, ctx } = t.context as TestContext;
@@ -677,7 +677,7 @@ test('BaseOAuth2Strategy#authenticate, that fails due to verify callback supplyi
     ctx.query = { code };
     const res = await strategy.authenticate(ctx);
     t.deepEqual(res.type, ActionType.FAIL, 'should be fail type');
-    const {challenge , status} = (res as FailAction);
+    const { challenge, status } = (res as FailAction);
     // TODO, not sure 401 is the correct meaning
     t.is(status, 401, 'should return 401 status code');
     t.deepEqual(challenge, info, 'no info is supplied');
@@ -685,7 +685,7 @@ test('BaseOAuth2Strategy#authenticate, that fails due to verify callback supplyi
 
 test('BaseOAuth2Strategy#authenticate, that fails due to state do not match in the second \
     authentication using sessionStore', async (t) => {
-        const { clientId, authorizationURL, tokenURL, verify , ctx} = t.context as TestContext;
+        const { clientId, authorizationURL, tokenURL, verify, ctx } = t.context as TestContext;
         const code: string = 's23d8dHgdfa';
         const strategy = new BaseOAuth2Strategy(
             clientId,
@@ -705,10 +705,10 @@ test('BaseOAuth2Strategy#authenticate, that fails due to state do not match in t
         t.deepEqual(firstRes.type, ActionType.REDIRECT, 'should be a redirect type');
         const url = (firstRes as RedirectAction).url;
         const state = parse(url, true).query.state;
-        ctx.query = { code , state: state + 'sdfd'};
+        ctx.query = { code, state: state + 'sdfd' };
         const secondRes = await strategy.authenticate(ctx);
         t.deepEqual(secondRes.type, ActionType.FAIL, 'should be a fail type');
-        const {challenge , status} = (secondRes as FailAction);
+        const { challenge, status } = (secondRes as FailAction);
         t.is(status, 403, 'should return 403 status code');
         t.deepEqual(challenge, 'Invalid authorization request state.'
             , 'message is supplied should match with which is supplied in sessionStore');
@@ -724,7 +724,7 @@ test('BaseOAuth2Strategy#authenticate, that fails due to stateStore verify callb
         };
 
         const baseStateStore: BaseStateStore = new BaseStateStore();
-        baseStateStore.verify = (ctx_: Koa.Context, providedState: string) => Promise.resolve({message});
+        baseStateStore.verify = (ctx: Koa.Context, providedState: string) => Promise.resolve({ message });
 
         const strategy = new BaseOAuth2Strategy(clientId, authorizationURL, tokenURL, verify,
             undefined, undefined, callbackURL, undefined, undefined, undefined, undefined, baseStateStore);
@@ -732,7 +732,7 @@ test('BaseOAuth2Strategy#authenticate, that fails due to stateStore verify callb
         ctx.query = { code };
         const res = await strategy.authenticate(ctx);
         t.deepEqual(res.type, ActionType.FAIL, 'should be fail type');
-        const {challenge , status} = (res as FailAction);
+        const { challenge, status } = (res as FailAction);
         t.is(status, 403, 'should return 403 status code');
         t.deepEqual(challenge, message, 'no message is supplied');
     });
@@ -746,7 +746,7 @@ test('BaseOAuth2Strategy#authenticate, that fails due to stateStore verify callb
         };
         const message = '';
         const baseStateStore: BaseStateStore = new BaseStateStore();
-        baseStateStore.verify = (ctx_: Koa.Context, providedState: string) => Promise.resolve({result: false, message});
+        baseStateStore.verify = (ctx: Koa.Context, providedState: string) => Promise.resolve({ result: false, message });
 
         const strategy = new BaseOAuth2Strategy(clientId, authorizationURL, tokenURL, verify,
             undefined, undefined, callbackURL, undefined, undefined, undefined, undefined, baseStateStore);
@@ -754,7 +754,7 @@ test('BaseOAuth2Strategy#authenticate, that fails due to stateStore verify callb
         ctx.query = { code };
         const res = await strategy.authenticate(ctx);
         t.deepEqual(res.type, ActionType.FAIL, 'should be fail type');
-        const {challenge , status} = (res as FailAction);
+        const { challenge, status } = (res as FailAction);
         t.is(status, 403, 'should return 403 status code');
         t.deepEqual(challenge, message, 'no message is supplied');
     });
@@ -768,7 +768,7 @@ test('BaseOAuth2Strategy#authenticate, that fails due to stateStore verify callb
         };
         const message = 'error';
         const baseStateStore: BaseStateStore = new BaseStateStore();
-        baseStateStore.verify = (ctx_: Koa.Context, providedState: string) => Promise.resolve({result: false, message});
+        baseStateStore.verify = (ctx: Koa.Context, providedState: string) => Promise.resolve({ result: false, message });
 
         const strategy = new BaseOAuth2Strategy(clientId, authorizationURL, tokenURL, verify,
             undefined, undefined, callbackURL, undefined, undefined, undefined, undefined, baseStateStore);
@@ -776,7 +776,7 @@ test('BaseOAuth2Strategy#authenticate, that fails due to stateStore verify callb
         ctx.query = { code };
         const res = await strategy.authenticate(ctx);
         t.deepEqual(res.type, ActionType.FAIL, 'should be fail type');
-        const {challenge , status} = (res as FailAction);
+        const { challenge, status } = (res as FailAction);
         t.is(status, 403, 'should return 403 status code');
         t.deepEqual(challenge, message, 'message should match');
     });
@@ -814,7 +814,7 @@ test('BaseOAuth2Strategy#authenticate, that fails due to verify callback supplyi
         ctx.query = { code };
         const res = await strategy.authenticate(ctx);
         t.deepEqual(res.type, ActionType.FAIL, 'should be fail type');
-        const {challenge , status} = (res as FailAction);
+        const { challenge, status } = (res as FailAction);
         // TODO, not sure 401 is the correct meaning
         t.is(status, 401, 'should return 401 status code');
         t.deepEqual(challenge, info, 'no info is supplied');
@@ -823,14 +823,14 @@ test('BaseOAuth2Strategy#authenticate, that fails due to verify callback supplyi
 test('BaseOAuth2Strategy#authenticate, that was denied', async (t) => {
     const { clientId, authorizationURL, tokenURL, callbackURL, ctx } = t.context as TestContext;
     const error = 'access_denied';
-    const verify = (at: string, rt: string, params, profile: object) => Promise.resolve({});
+    const verify = (at: string, rt: string, params, profile: object) => Promise.resolve({ user: null, info: null });
     const strategy = new BaseOAuth2Strategy(clientId, authorizationURL, tokenURL, verify,
         undefined, undefined, callbackURL);
 
     ctx.query = { error };
     const res = await strategy.authenticate(ctx);
     t.deepEqual(res.type, ActionType.FAIL, 'should be fail type');
-    const {challenge , status} = (res as FailAction);
+    const { challenge, status } = (res as FailAction);
     // TODO, not sure 401 is the correct meaning
     t.is(status, 401, 'should return 401 status code');
     t.deepEqual(challenge, undefined, 'no info is supplied');
@@ -840,13 +840,13 @@ test('BaseOAuth2Strategy#authenticate, that was denied with description', async 
     const { clientId, authorizationURL, tokenURL, ctx } = t.context as TestContext;
     const error = 'access_denied';
     const error_description = 'werwq;lerkjqwe';
-    const verify = (at: string, rt: string, params, profile: object) => Promise.resolve({});
+    const verify = (at: string, rt: string, params, profile: object) => Promise.resolve({ user: null, info: null });
     const strategy = new BaseOAuth2Strategy(clientId, authorizationURL, tokenURL, verify);
 
     ctx.query = { error, error_description };
     const res = await strategy.authenticate(ctx);
     t.deepEqual(res.type, ActionType.FAIL, 'should be fail type');
-    const {challenge , status} = (res as FailAction);
+    const { challenge, status } = (res as FailAction);
     // TODO, not sure 401 is the correct meaning
     t.is(status, 401, 'should return 401 status code');
     t.deepEqual(challenge, error_description, 'no info is supplied');
@@ -855,7 +855,7 @@ test('BaseOAuth2Strategy#authenticate, that was denied with description', async 
 test('BaseOAuth2Strategy#authenticate, that was returned with an error without description', async (t) => {
     const { clientId, authorizationURL, tokenURL, ctx } = t.context as TestContext;
     const error = 'invalid_scope';
-    const verify = (at: string, rt: string, params, profile: object) => Promise.resolve({});
+    const verify = (at: string, rt: string, params, profile: object) => Promise.resolve({ user: null, info: null });
     const strategy = new BaseOAuth2Strategy(clientId, authorizationURL, tokenURL, verify);
 
     ctx.query = { error };
@@ -871,7 +871,7 @@ test('BaseOAuth2Strategy#authenticate, that was returned with an error with desc
     const { clientId, authorizationURL, tokenURL, ctx } = t.context as TestContext;
     const error = 'invalid_scope';
     const error_description = 'asdfsadf';
-    const verify = (at: string, rt: string, params, profile: object) => Promise.resolve({});
+    const verify = (at: string, rt: string, params, profile: object) => Promise.resolve({ user: null, info: null });
     const strategy = new BaseOAuth2Strategy(clientId, authorizationURL, tokenURL, verify);
 
     ctx.query = { error, error_description };
@@ -888,7 +888,7 @@ test('BaseOAuth2Strategy#authenticate, that was returned with an error with desc
     const error = 'invalid_scope';
     const error_description = 'asdfsadf';
     const error_uri = 'http://error';
-    const verify = (at: string, rt: string, params, profile: object) => Promise.resolve({});
+    const verify = (at: string, rt: string, params, profile: object) => Promise.resolve({ user: null, info: null });
     const strategy = new BaseOAuth2Strategy(clientId, authorizationURL, tokenURL, verify);
 
     ctx.query = { error, error_description, error_uri };
@@ -985,23 +985,23 @@ with a non-json format', async (t) => {
     });
 
 test('BaseOAuth2Strategy#authenticate, that errors due to request read stream error', async (t) => {
-        const { clientId, authorizationURL, tokenURL, ctx } = t.context as TestContext;
-        const code = 'SplxlOBeZQQYbYS6WxSbIA';
-        const verify = (at: string, rt: string, params, profile: object) => {
-            throw Error('verify callback should not be called');
-        };
-        const strategy = new BaseOAuth2Strategy(clientId, authorizationURL, tokenURL, verify);
-        const errMessage = 'an error';
-        const uri = parse(tokenURL);
-        nock(`${uri.protocol}//${uri.host}`).post(uri.path).replyWithError(errMessage);
+    const { clientId, authorizationURL, tokenURL, ctx } = t.context as TestContext;
+    const code = 'SplxlOBeZQQYbYS6WxSbIA';
+    const verify = (at: string, rt: string, params, profile: object) => {
+        throw Error('verify callback should not be called');
+    };
+    const strategy = new BaseOAuth2Strategy(clientId, authorizationURL, tokenURL, verify);
+    const errMessage = 'an error';
+    const uri = parse(tokenURL);
+    nock(`${uri.protocol}//${uri.host}`).post(uri.path).replyWithError(errMessage);
 
-        ctx.query = { code };
-        await t.throws(
-            strategy.authenticate(ctx),
-            `Failed to obtain access token:${errMessage}`,
-            'should throw an OAuth2Error',
-        );
-    });
+    ctx.query = { code };
+    await t.throws(
+        strategy.authenticate(ctx),
+        `Failed to obtain access token:${errMessage}`,
+        'should throw an OAuth2Error',
+    );
+});
 
 test('BaseOAuth2Strategy#authenticate, that errors due to token request error, in node-oauth object literal form\
   with text body', async (t) => {
@@ -1047,7 +1047,7 @@ test('BaseOAuth2Strategy#authenticate, that errors due to verify callback supply
 
 test('BaseOAuth2Strategy#authenticate, that redirects with a proxy which is trusted by app and sets \
     x-forward-proto and x-forwarded-host', async (t) => {
-        const { clientId, authorizationURL, tokenURL, callbackURL, ctx} = t.context as TestContext;
+        const { clientId, authorizationURL, tokenURL, callbackURL, ctx } = t.context as TestContext;
         const code = 'SplxlOBeZQQYbYS6WxSbIA';
         const accessToken = '2YotnFZFEjr1zCsicMWpAA';
         const refreshToken = 'tGzv3JOkF0XG5Qx2TlKWIA';
@@ -1095,7 +1095,7 @@ test('BaseOAuth2Strategy#authenticate, that redirects with a proxy which is trus
         ctx.query = { code };
         const res = await strategy.authenticate(ctx, { callbackURL: relativeCallbackURL });
         t.deepEqual(res.type, ActionType.SUCCESS, 'should be success type');
-        const {user: u , info: i} = (res as SuccessAction);
+        const { user: u, info: i } = (res as SuccessAction);
         t.deepEqual(u, user, 'should supply user');
         t.deepEqual(i, info, 'should supply info');
     });

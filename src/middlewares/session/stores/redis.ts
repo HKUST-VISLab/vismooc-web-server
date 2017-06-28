@@ -26,4 +26,8 @@ export class RedisStore extends BaseStore {
         sid = this.prefix + sid;
         await this.redis.del(sid);
     }
+
+    public flushAll(){
+        this.redis.dropDatabase();
+    }
 }

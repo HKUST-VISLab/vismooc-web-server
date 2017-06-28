@@ -16,7 +16,7 @@ test.beforeEach('new a RedisStore', (t) => {
 });
 
 test.afterEach('flush db', async (t) => {
-    t.context.redis.dropDatabase();
+    (t.context as RedisStoreTestContext).store.flushAll();
 });
 
 test.serial('RedisStore#constructor', async (t) => {
