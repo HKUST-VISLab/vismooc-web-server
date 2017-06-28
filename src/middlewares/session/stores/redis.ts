@@ -1,11 +1,12 @@
-import { Redis } from '../../../database/redis';
+import { Redis, RedisOptions } from '../../../database/redis';
 import { Session } from '../index';
 import { BaseStore } from './base';
 
 export class RedisStore extends BaseStore {
-
-    constructor(prefix: string = '', private redis: Redis = new Redis()) {
+    private redis: Redis;
+    constructor(prefix: string, redisOptions: RedisOptions) {
         super(prefix);
+        this.redis = new Redis(redisOptions);
     }
 
     public async get(sid: string): Promise<Session> {

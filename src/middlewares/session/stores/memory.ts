@@ -12,7 +12,7 @@ export class MemoryStore extends BaseStore {
     private sessions: { [sid: string]: Session };
     private timeouts: { [sid: string]: NodeJS.Timer };
 
-    constructor(prefix: string = null) {
+    constructor(prefix: string) {
         super(prefix);
 
         // notify user that this store is not

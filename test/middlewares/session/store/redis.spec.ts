@@ -1,5 +1,4 @@
 import test from 'ava';
-import { Redis } from '../../../../src/database/redis';
 import { BaseStore, RedisStore, Session } from '../../../../src/middlewares/session';
 import { wait } from '../../../testUtils';
 
@@ -10,10 +9,8 @@ interface RedisStoreTestContext {
 
 let dbIdx = 11;
 test.beforeEach('new a RedisStore', (t) => {
-    const redis = new Redis({ db: dbIdx++ });
     t.context = {
-        redis,
-        store: new RedisStore(undefined, redis),
+        store: new RedisStore(undefined, { db: dbIdx++ }),
         sess: { cookie: { signed: true } },
     };
 });

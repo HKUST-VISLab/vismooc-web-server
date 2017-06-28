@@ -13,7 +13,7 @@ export default async function main() {
      */
     // const app = Server();
     // const port = CONFIG.port;
-    const server = Server().listen(CONFIG.port);
+    const server = Server(CONFIG);
 
     /**
      * Listen on provided port, on all network interfaces.
