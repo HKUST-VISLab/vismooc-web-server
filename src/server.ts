@@ -3,7 +3,7 @@ import bodyParser from 'koa-bodyparser-ts';
 import * as staticFile from 'koa-static';
 import { DataController } from './controllers';
 import DatabaseManager from './database/databaseManager';
-// import hackPermission from './middlewares/hackPermission';
+import hackPermission from './middlewares/hackPermission';
 import logging from './middlewares/logging';
 import session, {RedisStore} from './middlewares/session';
 import getCourseRouters from './routes/getCourse';
@@ -28,7 +28,7 @@ export default function Server(config: typeof CONFIG) {
 
     app.keys = ['secret'];
     app.use(session({store: new RedisStore('vismooc', DatabaseManager.CacheDatabase) }));
-
+    app.use(hackPermission());
     app.use(getCourseRouters.routes());
     app.use(getVideoRouters.routes());
     app.use(getForumRouters.routes());
