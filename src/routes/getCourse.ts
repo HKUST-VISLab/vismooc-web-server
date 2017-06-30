@@ -45,8 +45,8 @@ const getCourseRouters: Router = new Router()
             instructor: course.instructor,
             url: course.url,
             image: course.courseImageUrl,
-            startDate: course.startDate,
-            endDate: course.endDate,
+            startDate: +course.startDate,
+            endDate: +course.endDate,
             videos,
             description: course.description,
         };

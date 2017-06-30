@@ -31,8 +31,8 @@ const getForumRouters: Router = new Router()
             courseId,
             originalId: d.originalId,
             day: 1 + Math.floor((d.createdAt - startDate) / (86400 * 1000)),
-            sentiment: d.sentiment,
-            timestamp: d.createdAt,
+            sentiment: +d.sentiment,
+            timestamp: +d.createdAt,
         }));
         return await next();
     })
