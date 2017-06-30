@@ -22,7 +22,7 @@ const mockCourseData: DataSchema.Course[] = [
             '5d4be18bb92a41be8de2b82a6b1a7687',
             '1e539f45a7364ad1bb1bae19df2a5a77',
         ],
-        endDate: null, studentIds: ['83', '3', '5', '432', '342'], org: 'HKPOLYU',
+        endDate: 0, studentIds: ['83', '3', '5', '432', '342'], org: 'HKPOLYU',
         originalId: 'HKPOLYU+IL1001+2016_Q4_R0',
         startDate: 1893474000, description: 'NULL', enrollmentStart: null, status: null, year: null,
         url: null, grades: { 236: 100, 37: 95, 951: 15, 40: 70 },
