@@ -2,6 +2,7 @@ import { Document, Schema } from 'mongoose';
 
 /*------------------Course------------------ */
 export interface Course {
+    id: string;
     originalId: string;
     name: string;
     year: string;
@@ -23,6 +24,7 @@ export interface Course {
 export interface CourseModel extends Course, Document { }
 export const COURSES = 'courses';
 export const CourseSchema = new Schema({
+    id: String,
     originalId: String,
     name: String,
     year: Number,
@@ -44,7 +46,7 @@ export const CourseSchema = new Schema({
 
 /*------------------User------------------ */
 export interface User {
-    originalId: string;
+    id: string;
     username: string;
     name: string;
     language: string;
@@ -62,7 +64,7 @@ export interface User {
 export interface UserModel extends User, Document { }
 export const USERS = 'users';
 export const UserSchema = new Schema({
-    originalId: String,
+    id: String,
     username: String,
     name: String,
     language: String,
@@ -96,9 +98,9 @@ export const EnrollmentSchema = new Schema({
 
 /*------------------Video------------------ */
 export interface Video {
-    originalId: string;
+    id: string;
     name: string;
-    temporalHotness: { [key: string]: number } | object;
+    temporalHotness: { [courseId: string]: { [date: string]: { [userId: string]: number } } } | object;
     section: string;
     description: string;
     releaseDate?: number; // the microsecond of date(use date.gettime())
@@ -109,7 +111,7 @@ export interface Video {
 export interface VideoModel extends Video, Document { }
 export const VIDEOS = 'videos';
 export const VideoSchema = new Schema({
-    originalId: String,
+    id: String,
     name: String,
     temporalHotness: Schema.Types.Mixed,
     section: String,
@@ -122,7 +124,7 @@ export const VideoSchema = new Schema({
 
 /*------------------forum------------------ */
 export interface Forum {
-    originalId: string;
+    id: string;
     authorId: string;
     courseId: string;
     createdAt: number;
@@ -139,7 +141,7 @@ export interface ForumModel extends Forum, Document { }
 export const FORUM = 'forumthreads';
 export const ForumSchema = new Schema({
     authorId: String,
-    originalId: String,
+    id: String,
     courseId: String,
     createdAt: Number,
     updatedAt: Number,

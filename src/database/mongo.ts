@@ -51,7 +51,7 @@ export class MongoModel<T, U extends T & mongoose.Document> extends BaseModel<T>
 }
 
 export class MongoQuery<T> extends BaseQuery<T> {
-    private field: string = '';
+    // private field: string = '';
 
     constructor(private query: mongoose.Query<T>) {
         super();
@@ -101,7 +101,7 @@ export class MongoQuery<T> extends BaseQuery<T> {
     }
 
     public select(arg: string): this {
-        this.field = arg;
+        // this.field = arg;
         this.query = this.query.select(arg);
         return this;
     }

@@ -1,3 +1,4 @@
+import * as crypto from 'crypto';
 import * as Router from 'koa-router';
 import * as DataSchema from '../database/dataSchema';
 import { forceLayout } from '../utils/forceLayout';
@@ -11,7 +12,7 @@ function courseIdOf(query: any) {
 }
 
 const getForumRouters: Router = new Router()
-    .get('/getSentiment', async (ctx, next) => {
+    .get('/getSentiment', async (ctx: any, next) => {
         if (ctx.body) {
             return await next();
         }
@@ -29,10 +30,10 @@ const getForumRouters: Router = new Router()
             await ctx.dataController.getSentimentById(courseId);
         ctx.body = forumData.map(d => ({
             courseId,
-            originalId: d.originalId,
+            hashId: crypto.createHash('md5').update(d.id).digest('hex'),
             day: 1 + Math.floor((d.createdAt - startDate) / (86400 * 1000)),
-            sentiment: +d.sentiment,
-            timestamp: +d.createdAt,
+            sentiment: d.sentiment,
+            timestamp: d.createdAt,
         }));
         return await next();
     })
@@ -64,7 +65,7 @@ const getForumRouters: Router = new Router()
 
     //     ctx.body = wordList.slice(0, 100);
     // })
-    .get('/getSocialNetworkLayout', async (ctx, next) => {
+    .get('/getSocialNetworkLayout', async (ctx: any, next) => {
         if (ctx.body) {
             return await next();
         }
@@ -83,6 +84,7 @@ const getForumRouters: Router = new Router()
         const userActiveness = new Map<string, number>(Object.keys(socialNetworkData.activeness)
             .filter(d => socialNetworkData.activeness[d] >= activenessThreshold)
             .map(d => [d, socialNetworkData.activeness[d]] as [string, number]));
+
         const userDegree = {};
         for (const item of socialNetworkData.socialNetwork) {
             if (!userDegree[item.userId1]) {
@@ -124,6 +126,15 @@ const getForumRouters: Router = new Router()
         for (const node of nodes.values()) {
             minActiveness = Math.min(minActiveness, node.activeness);
             maxActiveness = Math.max(maxActiveness, node.activeness);
+        }
+
+        for (const link of links) {
+            link.source = crypto.createHash('md5').update(link.source).digest('hex');
+            link.target = crypto.createHash('md5').update(link.target).digest('hex');
+        }
+
+        for (const node of nodes.values()) {
+            node.id = crypto.createHash('md5').update(node.id).digest('hex');
         }
 
         ctx.body = {

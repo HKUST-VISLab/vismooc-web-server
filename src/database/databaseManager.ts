@@ -57,28 +57,28 @@ const DatabaseManager = {
     get Database(): MongoDatabase {
         return database;
     },
-    get CourseModel(){
+    get CourseModel() {
         return courseModel;
     },
-    get EnrollmentModel(){
+    get EnrollmentModel() {
         return enrollmentModel;
     },
-    get UserModel(){
+    get UserModel() {
         return userModel;
     },
-    get VideoModel(){
+    get VideoModel() {
         return videoModel;
     },
-    get LogModel(){
+    get LogModel() {
         return logModel;
     },
-    get DenseLogModel(){
+    get DenseLogModel() {
         return denseLogModel;
     },
-    get ForumModel(){
+    get ForumModel() {
         return forumModel;
     },
-    get SocialNetworkModel(){
+    get SocialNetworkModel() {
         return socialNetworkModel;
     },
     initMongo,

@@ -23,7 +23,7 @@ const mockCourseData: DataSchema.Course[] = [
             '1e539f45a7364ad1bb1bae19df2a5a77',
         ],
         endDate: null, studentIds: ['83', '3', '5', '432', '342'], org: 'HKPOLYU',
-        originalId: 'HKPOLYU+IL1001+2016_Q4_R0',
+        id: 'HKPOLYU+IL1001+2016_Q4_R0',
         startDate: 1893474000, description: 'NULL', enrollmentStart: null, status: null, year: null,
         url: null, grades: { 236: 100, 37: 95, 951: 15, 40: 70 },
     },
@@ -31,18 +31,18 @@ const mockCourseData: DataSchema.Course[] = [
 
 const mockVideoData: DataSchema.Video[] = [
     {
-        originalId: '5d4be18bb92a41be8de2b82a6b1a7687', url: null,
+        id: '5d4be18bb92a41be8de2b82a6b1a7687', url: null,
         duration: null, description: null, name: null, temporalHotness: {},
         section: 'Module 2: Finding information to fulfill my research needs, A. Introduction, Building relevance',
     },
     {
-        originalId: '06da6aa72f894c2a86ae0b06eceadaa5',
+        id: '06da6aa72f894c2a86ae0b06eceadaa5',
         duration: 141, description: 'Video', name: 'Video', temporalHotness: {},
         section: 'Module 1: Understanding my research task, A.  Introduction, Building relevance',
         url: 'https://www.youtube.com/watch?v=3_yD_cEKoCk',
     },
     {
-        originalId: '1e539f45a7364ad1bb1bae19df2a5a77',
+        id: '1e539f45a7364ad1bb1bae19df2a5a77',
         duration: 194, description: 'Video', name: 'Video', temporalHotness: {},
         section: 'Module 2: Finding information to fulfill my research needs, D-4.\
             Engineering, Activity 2-4 Learn about different types of Engineering Info & Who makes & disseminates it',
@@ -52,7 +52,7 @@ const mockVideoData: DataSchema.Video[] = [
 
 const mockUserData: DataSchema.User[] = [
     {
-        location: '', originalId: '236', username: 'Tnecesoc', name: '',
+        location: '', id: '236', username: 'Tnecesoc', name: '',
         gender: '', language: '', bio: 'NULL',
         courseIds: ['HKUST+COMP1022P+2016_Q2_R1',
             'HKUST+EBA102+2016_Q3_R1',
@@ -63,19 +63,19 @@ const mockUserData: DataSchema.User[] = [
         activeness: { 'HKPOLYU+IL1001+2016_Q4_R0': 10 },
     },
     {
-        location: '', originalId: '37', username: 'ShengkeZhou', name: '',
+        location: '', id: '37', username: 'ShengkeZhou', name: '',
         gender: 'm', language: '', bio: 'NULL', courseIds: [],
         birthDate: 694242000, country: '', droppedCourseIds: [], educationLevel: 'b', courseRoles: {},
         activeness: { 'HKPOLYU+IL1001+2016_Q4_R0': 200 },
     },
     {
-        location: '', originalId: '951', username: 'Dennis', name: '',
+        location: '', id: '951', username: 'Dennis', name: '',
         gender: 'm', language: '', bio: 'NULL', courseIds: ['HKUST+EBA101+2016_Q4_R1'],
         birthDate: 568011600, country: '', droppedCourseIds: [], educationLevel: 'b', courseRoles: {},
         activeness: { 'HKPOLYU+IL1001+2016_Q4_R0': 50 },
     },
     {
-        location: '', originalId: '40', username: 'micktse', name: '',
+        location: '', id: '40', username: 'micktse', name: '',
         gender: 'm', language: '', bio: 'NULL', courseIds: [],
         birthDate: 757400400, country: '', droppedCourseIds: [], educationLevel: 'b', courseRoles: {},
         activeness: { 'HKPOLYU+IL1001+2016_Q4_R0': 144 },
@@ -101,7 +101,7 @@ const mockDenselogsData: DataSchema.DenseLog[] = [
 const mockForumData: DataSchema.Forum[] = [
     {
         courseId: 'HKPOLYU+IL1001+2016_Q4_R0',
-        originalId: '53b2770e2b8b56e8fe0006ce',
+        id: '53b2770e2b8b56e8fe0006ce',
         sentiment: -0.4696, authorId: '4163045', createdAt: 1403852315447,
         parentId: null, commentThreadId: '53acf3242b8b5655e40004c0', type: 'Comment',
         updatedAt: 1403852315447,
@@ -111,7 +111,7 @@ const mockForumData: DataSchema.Forum[] = [
     },
     {
         courseId: 'HKPOLYU+IL1001+2016_Q4_R0',
-        originalId: '53ed862a86d3297497001525',
+        id: '53ed862a86d3297497001525',
         sentiment: 0, authorId: '2462790', createdAt: 1406477227926,
         parentId: '53d310de86d329bf9400102e', commentThreadId: '53d2d80b2b8b56cced001043',
         type: 'Comment', updatedAt: 1406477227926,
@@ -120,7 +120,7 @@ const mockForumData: DataSchema.Forum[] = [
     },
     {
         courseId: 'HKPOLYU+IL1001+2016_Q4_R0',
-        originalId: '5649da9990ef9ad1ef00030d',
+        id: '5649da9990ef9ad1ef00030d',
         sentiment: -0.17745, authorId: '4573581', createdAt: 1405097895532,
         parentId: null, commentThreadId: null, type: 'CommentThread',
         updatedAt: 1405097895532,
@@ -130,7 +130,7 @@ const mockForumData: DataSchema.Forum[] = [
     },
     {
         courseId: 'HKPOLYU+IL1001+2016_Q4_R0',
-        originalId: '53c8e1d186d329ac89000db7',
+        id: '53c8e1d186d329ac89000db7',
         sentiment: 0, authorId: '4582262', createdAt: 1403973061106,
         parentId: null, commentThreadId: '53acc1ea86d3297728000506', type: 'Comment',
         updatedAt: 1403973061106, body: 'Line 2: Class should be class\n\nLine 6: \
@@ -231,24 +231,24 @@ test('DataController#getCoursesByList', async (t) => {
     const dataController = new DataController(db);
     let courseList = ['HKPOLYU+IL1001+2016_Q4_R0', 'HKPOLYU+IL1001+2016_Q4_R1'];
     let output = await dataController.getCoursesByList(courseList);
-    let groundTruth = mockCourseData.filter(d => courseList.indexOf(d.originalId) !== -1);
+    let groundTruth = mockCourseData.filter(d => courseList.indexOf(d.id) !== -1);
     // console.info(output, groundTruth);
     t.true(Array.isArray(output), 'should return an array');
     t.is(output.length, groundTruth.length, 'the length of output should be the same as groundTruth of mockCourseData');
     for (let i = 0, len = output.length; i < len; ++i) {
-        t.is(output[i].originalId, groundTruth[i].originalId,
+        t.is(output[i].id, groundTruth[i].id,
             'the content of output should be the same as groundTruth of mockCourseData',
         );
     }
 
     courseList = ['HKPOLYU+IL1001+2016_Q4_R3', 'asdf'];
     output = await dataController.getCoursesByList(courseList);
-    groundTruth = mockCourseData.filter(d => courseList.indexOf(d.originalId) !== -1);
+    groundTruth = mockCourseData.filter(d => courseList.indexOf(d.id) !== -1);
     // console.info(output, groundTruth);
     t.true(Array.isArray(output), 'should return an array');
     t.is(output.length, groundTruth.length, 'the length of output should be the same as groundTruth of mockCourseData');
     for (let i = 0, len = output.length; i < len; ++i) {
-        t.is(output[i].originalId, groundTruth[i].originalId,
+        t.is(output[i].id, groundTruth[i].id,
             'the content of output should be the same as groundTruth of mockCourseData',
         );
     }
@@ -259,22 +259,22 @@ test('DataController#getCoursesById', async (t) => {
     const dataController = new DataController(db);
     const courseId = 'HKPOLYU+IL1001+2016_Q4_R0';
     let output = await dataController.getCoursesById(courseId);
-    let groundTruth = mockCourseData.filter(d => d.originalId === courseId);
+    let groundTruth = mockCourseData.filter(d => d.id === courseId);
     t.true(Array.isArray(output), 'should return an array');
     t.is(output.length, groundTruth.length, 'the length of output should be the same as groundTruth of mockCourseData');
     for (let i = 0, len = output.length; i < len; ++i) {
-        t.is(output[i].originalId, groundTruth[i].originalId,
+        t.is(output[i].id, groundTruth[i].id,
             'the content of output should be the same as groundTruth of mockCourseData',
         );
     }
 
     const wrongCourseId = 'asdf';
     output = await dataController.getCoursesById(wrongCourseId);
-    groundTruth = mockCourseData.filter(d => d.originalId === wrongCourseId);
+    groundTruth = mockCourseData.filter(d => d.id === wrongCourseId);
     t.true(Array.isArray(output), 'should return an array');
     t.is(output.length, groundTruth.length, 'the length of output should be 0');
     for (let i = 0, len = output.length; i < len; ++i) {
-        t.is(output[i].originalId, groundTruth[i].originalId,
+        t.is(output[i].id, groundTruth[i].id,
             'the content of output should be the same as groundTruth of mockCourseData',
         );
     }
@@ -285,7 +285,7 @@ test('DataController#getUserGradesByCourseId', async (t) => {
     const dataController = new DataController(db);
     const courseId = 'HKPOLYU+IL1001+2016_Q4_R0';
     const output = await dataController.getUserGradesByCourseId(courseId);
-    const groundTruth = mockCourseData.find(d => d.originalId === courseId);
+    const groundTruth = mockCourseData.find(d => d.id === courseId);
     for (const key of output.keys()) {
         t.is(output.get(key), groundTruth.grades[key],
             'the user grade of output should be the same as groundTruth of mockCourseData');
@@ -297,22 +297,22 @@ test('DataController#getUsersById', async (t) => {
     const dataController = new DataController(db);
     const userId = '236';
     let output = await dataController.getUsersById(userId);
-    let groundTruth = mockUserData.filter(d => d.originalId === userId);
+    let groundTruth = mockUserData.filter(d => d.id === userId);
     t.true(Array.isArray(output), 'should return an array');
     t.is(output.length, groundTruth.length, 'the length of output should be the same as groundTruth of mockUserData');
     for (let i = 0, len = output.length; i < len; ++i) {
-        t.is(output[i].originalId, groundTruth[i].originalId,
+        t.is(output[i].id, groundTruth[i].id,
             'the content of output should be the same as groundTruth of mockCourseData',
         );
     }
 
     const wrongUserId = 'asdf';
     output = await dataController.getUsersById(wrongUserId);
-    groundTruth = mockUserData.filter(d => d.originalId === wrongUserId);
+    groundTruth = mockUserData.filter(d => d.id === wrongUserId);
     t.true(Array.isArray(output), 'should return an array');
     t.is(output.length, groundTruth.length, 'the length of output should be 0');
     for (let i = 0, len = output.length; i < len; ++i) {
-        t.is(output[i].originalId, groundTruth[i].originalId,
+        t.is(output[i].id, groundTruth[i].id,
             'the content of output should be the same as groundTruth of mockCourseData',
         );
     }
@@ -324,7 +324,7 @@ test('DataController#getActivenessByUserId', async (t) => {
     let userId = '236';
     let courseId = 'HKPOLYU+IL1001+2016_Q4_R0';
     let output = await dataController.getActivenessByUserId(courseId, userId);
-    let groundTruth = mockUserData.find(d => d.originalId === userId);
+    let groundTruth = mockUserData.find(d => d.id === userId);
     t.is(output, groundTruth.activeness[courseId],
         'the content of output should be the same as groundTruth of mockUserData',
     );
@@ -332,7 +332,7 @@ test('DataController#getActivenessByUserId', async (t) => {
     userId = '951';
     courseId = 'HKPOLYU+IL1001+2016_Q4_R0';
     output = await dataController.getActivenessByUserId(courseId, userId);
-    groundTruth = mockUserData.find(d => d.originalId === userId);
+    groundTruth = mockUserData.find(d => d.id === userId);
     t.is(output, groundTruth.activeness[courseId],
         'the content of output should be the same as groundTruth of mockUserData',
     );
@@ -352,7 +352,7 @@ test('DataController#getAllUsers', async (t) => {
     t.true(Array.isArray(output), 'should return an array');
     t.is(output.length, groundTruth.length, 'the length of output should be the same as groundTruth of mockCourseData');
     for (let i = 0, len = output.length; i < len; ++i) {
-        t.is(output[i].originalId, groundTruth[i].originalId,
+        t.is(output[i].id, groundTruth[i].id,
             'the content of output should be the same as groundTruth of mockCourseData',
         );
     }
@@ -363,24 +363,24 @@ test('DataController#getUsersByList', async (t) => {
     const dataController = new DataController(db);
     let userList = ['37', '40', '236'];
     let output = await dataController.getUsersByList(userList);
-    let groundTruth = mockUserData.filter(d => userList.indexOf(d.originalId) !== -1);
+    let groundTruth = mockUserData.filter(d => userList.indexOf(d.id) !== -1);
     // console.info(output, groundTruth);
     t.true(Array.isArray(output), 'should return an array');
     t.is(output.length, groundTruth.length, 'the length of output should be the same as groundTruth of mockCourseData');
     for (let i = 0, len = output.length; i < len; ++i) {
-        t.is(output[i].originalId, groundTruth[i].originalId,
+        t.is(output[i].id, groundTruth[i].id,
             'the content of output should be the same as groundTruth of mockCourseData',
         );
     }
 
     userList = ['40', 'asdf'];
     output = await dataController.getUsersByList(userList);
-    groundTruth = mockUserData.filter(d => userList.indexOf(d.originalId) !== -1);
+    groundTruth = mockUserData.filter(d => userList.indexOf(d.id) !== -1);
     // console.info(output, groundTruth);
     t.true(Array.isArray(output), 'should return an array');
     t.is(output.length, groundTruth.length, 'the length of output should be the same as groundTruth of mockCourseData');
     for (let i = 0, len = output.length; i < len; ++i) {
-        t.is(output[i].originalId, groundTruth[i].originalId,
+        t.is(output[i].id, groundTruth[i].id,
             'the content of output should be the same as groundTruth of mockCourseData',
         );
     }
@@ -391,22 +391,22 @@ test('DataController#getVideosById', async (t) => {
     const dataController = new DataController(db);
     const videoId = '5d4be18bb92a41be8de2b82a6b1a7687';
     let output = await dataController.getVideosById(videoId);
-    let groundTruth = mockVideoData.filter(d => d.originalId === videoId);
+    let groundTruth = mockVideoData.filter(d => d.id === videoId);
     t.true(Array.isArray(output), 'should return an array');
     t.is(output.length, groundTruth.length, 'the length of output should be the same as groundTruth of mockUserData');
     for (let i = 0, len = output.length; i < len; ++i) {
-        t.is(output[i].originalId, groundTruth[i].originalId,
+        t.is(output[i].id, groundTruth[i].id,
             'the content of output should be the same as groundTruth of mockCourseData',
         );
     }
 
     const wrongVideoId = 'asdf';
     output = await dataController.getVideosById(wrongVideoId);
-    groundTruth = mockVideoData.filter(d => d.originalId === wrongVideoId);
+    groundTruth = mockVideoData.filter(d => d.id === wrongVideoId);
     t.true(Array.isArray(output), 'should return an array');
     t.is(output.length, groundTruth.length, 'the length of output should be 0');
     for (let i = 0, len = output.length; i < len; ++i) {
-        t.is(output[i].originalId, groundTruth[i].originalId,
+        t.is(output[i].id, groundTruth[i].id,
             'the content of output should be the same as groundTruth of mockCourseData',
         );
     }
@@ -418,24 +418,24 @@ test('DataController#getVideosByList', async (t) => {
     const courseId = 'HKPOLYU+IL1001+2016_Q4_R0';
     let videoList = ['06da6aa72f894c2a86ae0b06eceadaa5', '5d4be18bb92a41be8de2b82a6b1a7687'];
     let output = await dataController.getVideosByList(courseId, videoList);
-    let groundTruth = mockVideoData.filter(d => videoList.indexOf(d.originalId) !== -1);
+    let groundTruth = mockVideoData.filter(d => videoList.indexOf(d.id) !== -1);
     // console.info(output, groundTruth);
     t.true(Array.isArray(output), 'should return an array');
     t.is(output.length, groundTruth.length, 'the length of output should be the same as groundTruth of mockCourseData');
     for (let i = 0, len = output.length; i < len; ++i) {
-        t.is(output[i].originalId, groundTruth[i].originalId,
+        t.is(output[i].id, groundTruth[i].id,
             'the content of output should be the same as groundTruth of mockCourseData',
         );
     }
 
     videoList = ['this is a wrong video id', '5d4be18bb92a41be8de2b82a6b1a7687'];
     output = await dataController.getVideosByList(courseId, videoList);
-    groundTruth = mockVideoData.filter(d => videoList.indexOf(d.originalId) !== -1);
+    groundTruth = mockVideoData.filter(d => videoList.indexOf(d.id) !== -1);
     // console.info(output, groundTruth);
     t.true(Array.isArray(output), 'should return an array');
     t.is(output.length, groundTruth.length, 'the length of output should be the same as groundTruth of mockCourseData');
     for (let i = 0, len = output.length; i < len; ++i) {
-        t.is(output[i].originalId, groundTruth[i].originalId,
+        t.is(output[i].id, groundTruth[i].id,
             'the content of output should be the same as groundTruth of mockCourseData',
         );
     }
@@ -446,22 +446,22 @@ test('DataController#getUsersByList', async (t) => {
     const dataController = new DataController(db);
     let userList = ['37', '40', '236'];
     let output = await dataController.getUsersByList(userList);
-    let groundTruth = mockUserData.filter(d => userList.indexOf(d.originalId) !== -1);
+    let groundTruth = mockUserData.filter(d => userList.indexOf(d.id) !== -1);
     t.true(Array.isArray(output), 'should return an array');
     t.is(output.length, groundTruth.length, 'the length of output should be the same as groundTruth of mockCourseData');
     for (let i = 0, len = output.length; i < len; ++i) {
-        t.is(output[i].originalId, groundTruth[i].originalId,
+        t.is(output[i].id, groundTruth[i].id,
             'the content of output should be the same as groundTruth of mockCourseData',
         );
     }
 
     userList = ['40', 'asdf'];
     output = await dataController.getUsersByList(userList);
-    groundTruth = mockUserData.filter(d => userList.indexOf(d.originalId) !== -1);
+    groundTruth = mockUserData.filter(d => userList.indexOf(d.id) !== -1);
     t.true(Array.isArray(output), 'should return an array');
     t.is(output.length, groundTruth.length, 'the length of output should be the same as groundTruth of mockCourseData');
     for (let i = 0, len = output.length; i < len; ++i) {
-        t.is(output[i].originalId, groundTruth[i].originalId,
+        t.is(output[i].id, groundTruth[i].id,
             'the content of output should be the same as groundTruth of mockCourseData',
         );
     }
@@ -474,8 +474,8 @@ test('DataController#getCourseById', async (t) => {
     const dataController = new DataController(db);
     let output = await dataController.getCourseById(courseId);
     t.false(Array.isArray(output), 'shouldn\'t return an array');
-    const groundTruth = mockCourseData.find(d => d.originalId === courseId);
-    t.is(output.originalId, groundTruth.originalId,
+    const groundTruth = mockCourseData.find(d => d.id === courseId);
+    t.is(output.id, groundTruth.id,
         `groundTruth should be a subset of output`);
     // `${JSON.stringify(groundTruth)} should be a subset of ${JSON.stringify(output)}`);
 
@@ -491,7 +491,7 @@ test('DataController#getUserById', async (t) => {
     const dataController = new DataController(db);
     let output = await dataController.getUserById(userId);
     t.false(Array.isArray(output), 'should return an array');
-    const groundTruth = mockUserData.find(d => d.originalId === userId);
+    const groundTruth = mockUserData.find(d => d.id === userId);
     t.true(mongoContains(output, groundTruth), 'groundTruth should be a subset of output');
 
     const wrongUserId = 'asdf';
@@ -591,7 +591,7 @@ test('DataController#getSentimentById', async (t) => {
     let groundTruth = mockForumData.filter(d => d.courseId === courseId);
     t.true(Array.isArray(output), 'should return an array');
     t.is(output.length, groundTruth.length, 'the length of output should be the same as groundTruth of mockForumData');
-    // console.info('sentimentTest', output, groundTruth);
+
     for (let i = 0, len = output.length; i < len; ++i) {
         t.is(output[i].courseId, groundTruth[i].courseId,
             'the content of output should be the same as groundTruth of mockForumData',

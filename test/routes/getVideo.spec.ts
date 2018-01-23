@@ -3,6 +3,7 @@ import * as crypto from 'crypto';
 import * as Koa from 'koa';
 import * as mongoose from 'mongoose';
 import * as request from 'supertest';
+import { Logger, transports } from 'winston';
 import { DataController } from '../../src/controllers';
 import * as DataSchema from '../../src/database/dataSchema';
 import { MongoDatabase } from '../../src/database/mongo';
@@ -23,7 +24,7 @@ const mockCourseData: DataSchema.Course[] = [
             '1e539f45a7364ad1bb1bae19df2a5a77',
         ],
         endDate: null, studentIds: ['83', '3', '5', '432', '342'], org: 'HKPOLYU',
-        originalId: 'HKPOLYU+IL1001+2016_Q4_R0',
+        id: 'HKPOLYU+IL1001+2016_Q4_R0',
         startDate: 1893474000, description: 'NULL', enrollmentStart: null, status: null, year: null,
         url: null, grades: { 236: 100, 37: 95, 951: 15, 40: 70 },
     },
@@ -31,18 +32,18 @@ const mockCourseData: DataSchema.Course[] = [
 
 const mockVideoData: DataSchema.Video[] = [
     {
-        originalId: '5d4be18bb92a41be8de2b82a6b1a7687', url: null,
+        id: '5d4be18bb92a41be8de2b82a6b1a7687', url: null,
         duration: null, description: null, name: null, temporalHotness: {},
         section: 'Module 2: Finding information to fulfill my research needs, A. Introduction, Building relevance',
     },
     {
-        originalId: '06da6aa72f894c2a86ae0b06eceadaa5',
+        id: '06da6aa72f894c2a86ae0b06eceadaa5',
         duration: 141, description: 'Video', name: 'Video', temporalHotness: {},
         section: 'Module 1: Understanding my research task, A.  Introduction, Building relevance',
         url: 'https://www.youtube.com/watch?v=3_yD_cEKoCk',
     },
     {
-        originalId: '1e539f45a7364ad1bb1bae19df2a5a77',
+        id: '1e539f45a7364ad1bb1bae19df2a5a77',
         duration: 194, description: 'Video', name: 'Video', temporalHotness: {},
         section: 'Module 2: Finding information to fulfill my research needs, D-4.\
             Engineering, Activity 2-4 Learn about different types of Engineering Info & Who makes & disseminates it',
@@ -52,7 +53,7 @@ const mockVideoData: DataSchema.Video[] = [
 
 const mockUserData: DataSchema.User[] = [
     {
-        location: '', originalId: '236', username: 'Tnecesoc', name: '',
+        location: '', id: '236', username: 'Tnecesoc', name: '',
         gender: '', language: '', bio: 'NULL',
         courseIds: ['HKUST+COMP1022P+2016_Q2_R1',
             'HKUST+EBA102+2016_Q3_R1',
@@ -63,19 +64,19 @@ const mockUserData: DataSchema.User[] = [
         activeness: { 'HKPOLYU+IL1001+2016_Q4_R0': 10 },
     },
     {
-        location: '', originalId: '37', username: 'ShengkeZhou', name: '',
+        location: '', id: '37', username: 'ShengkeZhou', name: '',
         gender: 'm', language: '', bio: 'NULL', courseIds: [],
         birthDate: 694242000, country: '', droppedCourseIds: [], educationLevel: 'b', courseRoles: {},
         activeness: { 'HKPOLYU+IL1001+2016_Q4_R0': 200 },
     },
     {
-        location: '', originalId: '951', username: 'Dennis', name: '',
+        location: '', id: '951', username: 'Dennis', name: '',
         gender: 'm', language: '', bio: 'NULL', courseIds: ['HKUST+EBA101+2016_Q4_R1'],
         birthDate: 568011600, country: '', droppedCourseIds: [], educationLevel: 'b', courseRoles: {},
         activeness: { 'HKPOLYU+IL1001+2016_Q4_R0': 50 },
     },
     {
-        location: '', originalId: '40', username: 'micktse', name: '',
+        location: '', id: '40', username: 'micktse', name: '',
         gender: 'm', language: '', bio: 'NULL', courseIds: [],
         birthDate: 757400400, country: '', droppedCourseIds: [], educationLevel: 'b', courseRoles: {},
         activeness: { 'HKPOLYU+IL1001+2016_Q4_R0': 144 },
@@ -157,6 +158,13 @@ test.beforeEach('New a koa server', async (t) => {
     app.use(getVideoRouters.routes());
 
     app.context.dataController = new DataController(db);
+    // loger
+    app.context.logger = new Logger({
+        level: 'debug',
+        transports: [
+            new (transports.Console)(),
+        ],
+    });
     t.context = {
         app,
     };
@@ -176,25 +184,30 @@ const errMiddleware = async (ctx, next) => {
 };
 
 interface VideoRouterResponse {
-    timestamp: number;
-    clicks: any[];
+    courseId: string;
+    denseLogs: Array<{
+        timestamp: number;
+        clicks: any[];
+    }>;
 }
 
 test('VideoRouter#click operators', async (t) => {
     const { app } = t.context as TestContext;
     const req = request(app.listen());
     const cmp = (a, b) => a.timestamp - b.timestamp;
-    function checkOutputWithGroundTruth(msgPrefix, output, cId: string, vId: string, sDate?, eDate?) {
+    function checkOutputWithGroundTruth(msgPrefix, output: VideoRouterResponse,
+                                        cId: string, vId: string, sDate?, eDate?) {
         if (cId && cId.indexOf(' ') !== -1) {
             cId = cId.replace(new RegExp(' ', 'gm'), '+');
         }
-        output.sort(cmp);
+        const denseLogs = output.denseLogs;
+        denseLogs.sort(cmp);
         const groundTruth = mockDenselogsData
             .filter(d => d.courseId === cId && d.videoId === vId &&
                 (!sDate || d.timestamp >= sDate) && (!eDate || d.timestamp <= eDate))
             .sort(cmp).map((d) => Object.assign({}, d));
-        for (let i = 0, len = output.length; i < len; ++i) {
-            const item = output[i];
+        for (let i = 0, len = denseLogs.length; i < len; ++i) {
+            const item = denseLogs[i];
             for (const click of groundTruth[i].clicks) {
                 delete click.path;
                 if (click.userId) {
@@ -205,7 +218,7 @@ test('VideoRouter#click operators', async (t) => {
             delete groundTruth[i].videoId;
 
             t.deepEqual(item, groundTruth[i],
-                `${msgPrefix}:the output_${i} should be the same as the groundTruth_${i}`);
+                `${msgPrefix}:the denseLogs_${i} should be the same as the groundTruth_${i}`);
         }
     }
 
@@ -220,7 +233,7 @@ test('VideoRouter#click operators', async (t) => {
             startDate,
             endDate,
         });
-    let output: VideoRouterResponse[] = res.body;
+    let output: VideoRouterResponse = res.body;
     checkOutputWithGroundTruth('in the whole time range', output, courseId, videoId, startDate, endDate);
 
     startDate = 2000;
@@ -234,7 +247,7 @@ test('VideoRouter#click operators', async (t) => {
             startDate,
             endDate,
         });
-    output = res.body as VideoRouterResponse[];
+    output = res.body as VideoRouterResponse;
     checkOutputWithGroundTruth('within the time range', output, courseId, videoId, startDate, endDate);
 
     startDate = 3000;
@@ -248,7 +261,7 @@ test('VideoRouter#click operators', async (t) => {
             startDate,
             endDate,
         });
-    output = res.body as VideoRouterResponse[];
+    output = res.body as VideoRouterResponse;
     checkOutputWithGroundTruth('not in the time range', output, courseId, videoId, startDate, endDate);
 
     courseId = 'HKPOLYU IL1001 2016_Q4_R0';
@@ -260,7 +273,7 @@ test('VideoRouter#click operators', async (t) => {
             startDate,
             endDate,
         });
-    output = res.body as VideoRouterResponse[];
+    output = res.body as VideoRouterResponse;
     checkOutputWithGroundTruth('courseId seperated by space', output, courseId, videoId);
 
     courseId = 'HKPOLYU+IL1001+2016_Q4_R0';
@@ -270,13 +283,13 @@ test('VideoRouter#click operators', async (t) => {
             courseId,
             videoId,
         });
-    output = res.body as VideoRouterResponse[];
+    output = res.body as VideoRouterResponse;
     checkOutputWithGroundTruth('no time range', output, courseId, videoId);
 
     courseId = 'HKPOLYU+IL1001+2016_Q4_R0';
     videoId = '06da6aa72f894c2a86ae0b06eceadaa5';
     res = await req.get('/getClicks');
-    output = res.body as VideoRouterResponse[];
+    output = res.body as VideoRouterResponse;
     checkOutputWithGroundTruth('no courseId and videoId', output, null, null);
 });
 

@@ -2,6 +2,7 @@ import test from 'ava';
 import * as Koa from 'koa';
 import * as mongoose from 'mongoose';
 import * as request from 'supertest';
+import { Logger, transports } from 'winston';
 import { DataController } from '../../src/controllers';
 import * as DataSchema from '../../src/database/dataSchema';
 import { MongoDatabase } from '../../src/database/mongo';
@@ -23,7 +24,7 @@ const mockCourseData: DataSchema.Course[] = [
             '1e539f45a7364ad1bb1bae19df2a5a77',
         ],
         endDate: 0, studentIds: ['83', '3', '5', '432', '342'], org: 'HKPOLYU',
-        originalId: 'HKPOLYU+IL1001+2016_Q4_R0',
+        id: 'HKPOLYU+IL1001+2016_Q4_R0',
         startDate: 1893474000, description: 'NULL', enrollmentStart: null, status: null, year: null,
         url: null, grades: { 236: 100, 37: 95, 951: 15, 40: 70 },
     },
@@ -31,18 +32,18 @@ const mockCourseData: DataSchema.Course[] = [
 
 const mockVideoData: DataSchema.Video[] = [
     {
-        originalId: '5d4be18bb92a41be8de2b82a6b1a7687', url: null,
+        id: '5d4be18bb92a41be8de2b82a6b1a7687', url: null,
         duration: null, description: null, name: null, temporalHotness: {},
         section: 'Module 2: Finding information to fulfill my research needs, A. Introduction, Building relevance',
     },
     {
-        originalId: '06da6aa72f894c2a86ae0b06eceadaa5',
+        id: '06da6aa72f894c2a86ae0b06eceadaa5',
         duration: 141, description: 'Video', name: 'Video', temporalHotness: {},
         section: 'Module 1: Understanding my research task, A.  Introduction, Building relevance',
         url: 'https://www.youtube.com/watch?v=3_yD_cEKoCk',
     },
     {
-        originalId: '1e539f45a7364ad1bb1bae19df2a5a77',
+        id: '1e539f45a7364ad1bb1bae19df2a5a77',
         duration: 194, description: 'Video', name: 'Video', temporalHotness: {},
         section: 'Module 2: Finding information to fulfill my research needs, D-4.\
             Engineering, Activity 2-4 Learn about different types of Engineering Info & Who makes & disseminates it',
@@ -52,7 +53,7 @@ const mockVideoData: DataSchema.Video[] = [
 
 const mockUserData: DataSchema.User[] = [
     {
-        location: '', originalId: '236', username: 'Tnecesoc', name: '',
+        location: '', id: '236', username: 'Tnecesoc', name: '',
         gender: '', language: '', bio: 'NULL',
         courseIds: ['HKUST+COMP1022P+2016_Q2_R1',
             'HKUST+EBA102+2016_Q3_R1',
@@ -63,19 +64,19 @@ const mockUserData: DataSchema.User[] = [
         activeness: { 'HKPOLYU+IL1001+2016_Q4_R0': 10 },
     },
     {
-        location: '', originalId: '37', username: 'ShengkeZhou', name: '',
+        location: '', id: '37', username: 'ShengkeZhou', name: '',
         gender: 'm', language: '', bio: 'NULL', courseIds: [],
         birthDate: 694242000, country: '', droppedCourseIds: [], educationLevel: 'b', courseRoles: {},
         activeness: { 'HKPOLYU+IL1001+2016_Q4_R0': 200 },
     },
     {
-        location: '', originalId: '951', username: 'Dennis', name: '',
+        location: '', id: '951', username: 'Dennis', name: '',
         gender: 'm', language: '', bio: 'NULL', courseIds: ['HKUST+EBA101+2016_Q4_R1'],
         birthDate: 568011600, country: '', droppedCourseIds: [], educationLevel: 'b', courseRoles: {},
         activeness: { 'HKPOLYU+IL1001+2016_Q4_R0': 50 },
     },
     {
-        location: '', originalId: '40', username: 'micktse', name: '',
+        location: '', id: '40', username: 'micktse', name: '',
         gender: 'm', language: '', bio: 'NULL', courseIds: [],
         birthDate: 757400400, country: '', droppedCourseIds: [], educationLevel: 'b', courseRoles: {},
         activeness: { 'HKPOLYU+IL1001+2016_Q4_R0': 144 },
@@ -121,6 +122,13 @@ test.beforeEach('New a koa server', async (t) => {
     app.use(getCourseRouters.routes());
 
     app.context.dataController = new DataController(db);
+    // loger
+    app.context.logger = new Logger({
+        level: 'debug',
+        transports: [
+            new (transports.Console)(),
+        ],
+    });
     t.context = {
         app,
     };
@@ -145,19 +153,19 @@ test('CourseRouter#getCourseInfo', async (t) => {
     const courseId = 'HKPOLYU+IL1001+2016_Q4_R0';
     const res = await req.get('/getCourseInfo').query({ courseId });
     const output = res.body;
-    const groundTruthCourse = mockCourseData.find(d => d.originalId === courseId);
-    const groundTruthVideos = mockVideoData.filter(d => groundTruthCourse.videoIds.find(vid => vid === d.originalId))
+    const groundTruthCourse = mockCourseData.find(d => d.id === courseId);
+    const groundTruthVideos = mockVideoData.filter(d => groundTruthCourse.videoIds.find(vid => vid === d.id))
         .map((v) => ({
             courseId,
             name: v.name,
-            id: v.originalId,
+            id: v.id,
             duration: v.duration,
             url: v.url || '',
             section: v.section,
             temporalHotness: v.temporalHotness,
         }));
     const groundTruth = JSON.parse(JSON.stringify({
-        id: groundTruthCourse.originalId,
+        id: groundTruthCourse.id,
         name: groundTruthCourse.name,
         instructor: groundTruthCourse.instructor,
         url: groundTruthCourse.url,
@@ -175,32 +183,34 @@ test('CourseRouter#getCourseList', async (t) => {
     const req = request(app.listen());
     const courseIds = ['HKPOLYU+IL1001+2016_Q4_R0'];
     const convertCourse = (c) => ({
-        id: c.originalId,
+        id: c.id,
         name: c.name,
         year: c.year,
+        startDate: c.startDate,
+        endDate: c.endDate,
     });
 
     let res = await req.get('/getCourseList');
     let output = res.body;
-    t.falsy(output.selectedCourseId, 'the selectedCourseId of outputs should be empty if no OAuthReferer');
+    t.falsy(output.selectedCourseId, 'the selectedCourseId of outputs should be empty if no redirectCourseId');
     t.deepEqual(output.coursesList, [], 'the coursesList should be an empty array if no session');
 
     (app.context as any).session = {};
     res = await req.get('/getCourseList');
     output = res.body;
-    t.falsy(output.selectedCourseId, 'the selectedCourseId of outputs should be empty if no OAuthReferer');
+    t.falsy(output.selectedCourseId, 'the selectedCourseId of outputs should be empty if no redirectCourseId');
     t.deepEqual(output.coursesList, [], 'the coursesList should be an empty array if no session in ctx');
 
     (app.context as any).session = { passport: {} };
     res = await req.get('/getCourseList');
     output = res.body;
-    t.falsy(output.selectedCourseId, 'the selectedCourseId of outputs should be empty if no OAuthReferer');
+    t.falsy(output.selectedCourseId, 'the selectedCourseId of outputs should be empty if no redirectCourseId');
     t.deepEqual(output.coursesList, [], 'the coursesList should be an empty array if no user in passport');
 
     (app.context as any).session = { passport: { user: {} } };
     res = await req.get('/getCourseList');
     output = res.body;
-    t.falsy(output.selectedCourseId, 'the selectedCourseId of outputs should be empty if no OAuthReferer');
+    t.falsy(output.selectedCourseId, 'the selectedCourseId of outputs should be empty if no redirectCourseId');
     t.deepEqual(output.coursesList, [], 'the coursesList should be an empty array if no permission in user');
 
     (app.context as any).session = {
@@ -212,15 +222,23 @@ test('CourseRouter#getCourseList', async (t) => {
                 }, {}),
             },
         },
+        redirectCourseId: `course-v1:${courseIds[0]}/`,
     };
 
     res = await req.get('/getCourseList');
     output = res.body;
-    const groundTruth = mockCourseData.filter(d => courseIds.indexOf(d.originalId) !== -1).map(convertCourse);
+    const groundTruth = mockCourseData.filter(d => courseIds.indexOf(d.id) !== -1).map(convertCourse);
     t.is(output.coursesList.length, groundTruth.length,
         'the length of output should be the same as groundTruth of mockUserData');
     t.deepEqual(output.coursesList, groundTruth, 'the course in output should be the same as groundTruth');
+    t.deepEqual(output.selectedCourseId, courseIds[0],
+        'the selectedCourseId of outputs should equal to groundTruth');
 
+    // OAuthReferer = `course-v1:${courseIds[0]}/`;
+    res = await req.get('/getCourseList');
+    output = res.body;
+    t.falsy(output.selectedCourseId,
+        'the selectedCourseId of outputs should be falsy if it has been consumed');
 });
 
 test('CourseRouter#getDemographicInfo', async (t) => {
@@ -258,7 +276,7 @@ test('CourseRouter#getDemographicInfo', async (t) => {
     })).sort(cmp);
 
     let res = await req.get('/getDemographicInfo').query({ courseId });
-    let output = res.body.sort(cmp);
+    let output = res.body.demographicInfo.sort(cmp);
     t.is(output.length, groundTruth.length, 'the length of output should be the same as groundTruth of mockUserData');
     for (let i = 0, len = output.length; i < len; ++i) {
         t.true(mongoContains(output[i], groundTruth[i]), `groundTruth_${i} should be a subset of output_${i}`);
@@ -266,7 +284,7 @@ test('CourseRouter#getDemographicInfo', async (t) => {
 
     courseId = 'HKPOLYU IL1001 2016_Q4_R0';
     res = await req.get('/getDemographicInfo').query({ courseId });
-    const output2 = res.body.sort(cmp);
+    const output2 = res.body.demographicInfo.sort(cmp);
 
     t.is(output.length, output2.length, 'the length of current output should be same as the first time\'s output');
     for (let i = 0, len = output.length; i < len; ++i) {

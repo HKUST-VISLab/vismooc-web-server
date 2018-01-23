@@ -28,6 +28,8 @@ const getVideoRouters: Router = new Router()
         if (ctx.body) {
             return await next();
         }
+        ctx.logger.debug('==========Begin of /getClicks==========');
+
         const query = ctx.query;
         const videoId: string = videoIdOf(query);
         const courseId: string = courseIdOf(query);
@@ -48,7 +50,12 @@ const getVideoRouters: Router = new Router()
             delete denselog.courseId;
             delete denselog.videoId;
         }
-        ctx.body = logs;
+        ctx.body = { courseId, videoId, denseLogs: logs };
+
+        ctx.logger.debug(`The body.courseId is:${ctx.body.courseId}`);
+        ctx.logger.debug(`The body.videoId is:${ctx.body.videoId}`);
+        ctx.logger.silly(`The res.body is:${JSON.stringify(ctx.body)}`);
+        ctx.logger.debug('=======End of /getClicks===========');
         await next();
     });
 

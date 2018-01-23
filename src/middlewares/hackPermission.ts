@@ -1,7 +1,7 @@
 import { Context } from 'koa';
+import { Session } from 'koa-session-ts';
 import DatabaseManager from '../database/databaseManager';
 import * as DataSchema from '../database/dataSchema';
-import { Session } from './session';
 
 export default (options: any = {}) => {
     return async (ctx: Context, next: () => Promise<any>) => {
@@ -12,7 +12,7 @@ export default (options: any = {}) => {
             ctx.session.passport = { user: {} };
         }
         if (!ctx.session.passport.user) {
-            ctx.session.passport.user = {};
+            ctx.session.passport.user = { username: 'root' };
         }
         const courses = await DatabaseManager.Database
             .model<DataSchema.Course, DataSchema.CourseModel>(DataSchema.COURSES)
@@ -20,7 +20,7 @@ export default (options: any = {}) => {
         // console.info(courses);
 
         ctx.session.passport.user.permissions = courses.reduce((o, c) => {
-            o[c.originalId] = true;
+            o[c.id] = true;
             return o;
         }, {});
 

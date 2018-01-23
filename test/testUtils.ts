@@ -1,4 +1,5 @@
-import { IncomingMessage, ServerResponse } from 'http';
+import { IncomingMessage, OutgoingHttpHeaders, ServerResponse } from 'http';
+import { Socket } from 'net';
 import { Readable, Writable } from 'stream';
 import { deepEqual } from '../src/utils';
 // import {
@@ -43,7 +44,7 @@ export class MockReq extends Readable implements IncomingMessage {
         super();
     }
 
-    public setTimeout(msecs: number, callback: () => {}): any {
+    public setTimeout(msecs: number, callback: () => void): any {
         return 1;
     }
 
@@ -59,7 +60,12 @@ export class MockRes extends Writable implements ServerResponse {
                 public statusMessage: string = 'ok',
                 public headersSent: boolean = false,
                 public sendDate: boolean = true,
-                public finished: boolean = false) {
+                public finished: boolean = false,
+                public upgrading: boolean = false,
+                public chunkedEncoding: boolean = false,
+                public shouldKeepAlive: boolean = false,
+                public useChunkedEncodingByDefault: boolean = false,
+                public connection: Socket = null) {
         super();
         this.data = '';
         this.headers = {};
@@ -67,6 +73,14 @@ export class MockRes extends Writable implements ServerResponse {
 
     // Extended base methods
     public writeContinue(): void {
+        return;
+    }
+
+    public assignSocket(socket: Socket): void {
+        return;
+    }
+
+    public detachSocket(socket: Socket): void {
         return;
     }
 
@@ -83,13 +97,30 @@ export class MockRes extends Writable implements ServerResponse {
         this.headers[name] = value;
         return;
     }
-    public setTimeout(msecs: number, callback: () => void): ServerResponse {
+    public setTimeout(msecs: number, callback: () => void): this {
         return this;
     }
 
     public getHeader(name: string): any {
         return this.headers[name];
     }
+
+    public getHeaders(): OutgoingHttpHeaders {
+        return {};
+    }
+
+    public getHeaderNames(): string[] {
+        return [''];
+    }
+
+    public hasHeader(name: string): boolean {
+        return true;
+    }
+
+    public flushHeaders(): void {
+        return;
+    }
+
     public removeHeader(name: string): void {
         return;
     }

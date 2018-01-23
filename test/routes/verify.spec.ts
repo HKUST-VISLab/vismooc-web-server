@@ -1,6 +1,7 @@
 import test from 'ava';
 import * as Koa from 'koa';
 import * as request from 'supertest';
+import { Logger, transports } from 'winston';
 import verifyRouter from '../../src/routes/verify';
 
 interface TestContext {
@@ -16,6 +17,13 @@ test.beforeEach('New a koa server', async (t) => {
             ctx.body = 'no need to verify';
         }
         await next();
+    });
+    // loger
+    app.context.logger = new Logger({
+        level: 'debug',
+        transports: [
+            new (transports.Console)(),
+        ],
     });
     t.context = {
         app,

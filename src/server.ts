@@ -1,19 +1,30 @@
+import * as kcors from 'kcors';
 import * as Koa from 'koa';
 import bodyParser from 'koa-bodyparser-ts';
-import * as staticFile from 'koa-static';
+import { Passport } from 'koa-passport-ts';
+import sessionFactory from 'koa-session-ts';
+
+import { Logger, LoggerInstance, transports } from 'winston';
 import { DataController } from './controllers';
 import DatabaseManager from './database/databaseManager';
+import { CONFIG } from './init';
 import hackPermission from './middlewares/hackPermission';
+import { HKMOOCStrategy } from './middlewares/HKMOOCStrategy';
 import logging from './middlewares/logging';
-import session, {RedisStore} from './middlewares/session';
+import permission from './middlewares/permission';
+// import sessionFactory, { RedisStore } from './middlewares/session';
+import { RedisStore } from './middlewares/redisSessionStore';
 import getCourseRouters from './routes/getCourse';
 import getForumRouters from './routes/getForum';
 import getVideoRouters from './routes/getVideo';
-import { CONFIG } from './init';
+import oauth2Routes from './routes/oauth';
+import verifyRouter from './routes/verify';
+const pkg =  process.env.NODE_ENV === 'development' ? require('../package.json') : require('./package.json');
 
 declare module 'koa' {
     export interface BaseContext {
         dataController: DataController;
+        logger: LoggerInstance;
     }
 }
 
@@ -21,16 +32,56 @@ export default function Server(config: typeof CONFIG) {
     const app: Koa = new Koa();
     // data controller
     app.context.dataController = new DataController(DatabaseManager.Database);
+    // loger
+    app.context.logger = new Logger({
+        level: CONFIG.logLevel,
+        transports: [
+            new (transports.Console)({
+                label: `vismooc-ws@${pkg.version}`,
+            }),
+        ],
+    });
     // middlewares
+    app.use(kcors());
     app.use(logging('combined'));
     app.use(bodyParser());
-    app.use(staticFile('./public/'));
 
     app.keys = ['secret'];
-    app.use(session({store: new RedisStore('vismooc', DatabaseManager.CacheDatabase) }));
-    app.use(hackPermission());
-    app.use(getCourseRouters.routes());
-    app.use(getVideoRouters.routes());
-    app.use(getForumRouters.routes());
+    app.use(sessionFactory({ store: new RedisStore('vismooc', DatabaseManager.CacheDatabase) }));
+
+    const passport = new Passport(app.context);
+
+    const { clientId, authorizationURL, tokenURL, callbackURL, clientSecret, scope } = config.oauth2;
+
+    passport.use(new HKMOOCStrategy(clientId, authorizationURL, tokenURL,
+        async (accessToken, refreshToken, params, profile) => {
+            const user = profile;
+            // Return user model
+            return { user, info: null };
+        }, undefined, undefined, undefined, callbackURL, scope, undefined, clientSecret));
+
+    passport.serializeUser(async (user, ctx) => {
+        ctx.logger.debug(`serializeUser:${JSON.stringify(user)}`);
+        return user;
+    });
+
+    passport.deserializeUser((user, ctx) => {
+        ctx.logger.debug(`deserializeUser:${JSON.stringify(user)}`);
+        return user;
+    });
+
+    app.use(passport.initialize());
+    app.use(passport.session());
+    app.use(oauth2Routes(passport).routes());
+    app.use(permission());
+    if (process.env.NODE_ENV === 'development') {
+        app.use(hackPermission());
+    }
+    const prefixApi = '/api';
+    app.use(verifyRouter.prefix(prefixApi).routes());
+    app.use(getCourseRouters.prefix(prefixApi).routes());
+    app.use(getVideoRouters.prefix(prefixApi).routes());
+    app.use(getForumRouters.prefix(prefixApi).routes());
+
     return app.listen(config.port);
 }

@@ -1,4 +1,3 @@
-import * as R from 'ramda';
 import DatabaseManager from '../database/databaseManager';
 import * as DataSchema from '../database/dataSchema';
 import { MongoDatabase } from '../database/mongo';
@@ -8,14 +7,14 @@ import { MongoDatabase } from '../database/mongo';
 /*-----------------Mongo----------------*/
 export class DataController {
 
-    public getCourseById = R.memoize(async (id) => this.getCoursesById(id)
-        .then(this.firstElement)) as (id: string) => Promise<DataSchema.Course>;
-    public getVideoById = R.memoize(async (id) => this.getVideosById(id)
-        .then(this.firstElement)) as (id: string) => Promise<DataSchema.Video>;
-    public getUserById = R.memoize(async (id) => this.getUsersById(id)
-        .then(this.firstElement)) as (id: string) => Promise<DataSchema.User>;
-    public getUserByUsername = R.memoize(async (username) => this.getUsersByUsername(username)
-        .then(this.firstElement)) as (id: string) => Promise<DataSchema.User>;
+    public getCourseById = async (id) => this.getCoursesById(id)
+        .then(this.firstElement) as (id: string) => Promise<DataSchema.Course>;
+    public getVideoById = async (id) => this.getVideosById(id)
+        .then(this.firstElement) as (id: string) => Promise<DataSchema.Video>;
+    public getUserById = async (id) => this.getUsersById(id)
+        .then(this.firstElement) as (id: string) => Promise<DataSchema.User>;
+    public getUserByUsername = async (username) => this.getUsersByUsername(username)
+        .then(this.firstElement) as (username: string) => Promise<DataSchema.User>;
 
     constructor(private database: MongoDatabase) {
         if (!database) {
@@ -26,7 +25,7 @@ export class DataController {
     public async getSentimentById(courseId: string): Promise<DataSchema.Forum[]> {
         return await this.database.model<DataSchema.Forum, DataSchema.ForumModel>(DataSchema.FORUM)
             .where('courseId').equals(courseId)
-            .select('courseId createdAt sentiment originalId')
+            .select('courseId createdAt sentiment id')
             .exec();
     }
 
@@ -42,7 +41,7 @@ export class DataController {
     */
     public async getActivenessByUserId(courseId: string, userId: string): Promise<number> {
         const users = await this.database.model<DataSchema.User, DataSchema.UserModel>(DataSchema.USERS)
-            .where('originalId').equals(userId)
+            .where('id').equals(userId)
             .exec();
         if (users.length === 0) {
             return null;
@@ -84,7 +83,8 @@ export class DataController {
         const course = await this.getCourseById(courseId);
         const grades = course.grades;
         const ret = new Map<string, number>();
-        Object.keys(grades).forEach(d => ret.set(d, grades[d]));
+        if (grades)
+            Object.keys(grades).forEach(d => ret.set(d, grades[d]));
         return ret;
     }
 
@@ -152,25 +152,25 @@ export class DataController {
 
     public async getCoursesById(id: string): Promise<DataSchema.Course[]> {
         return await this.database.model<DataSchema.Course, DataSchema.CourseModel>(DataSchema.COURSES)
-            .where('originalId').equals(id)
+            .where('id').equals(id)
             .exec();
     }
 
     public async getCoursesByList(courseIds: string[]): Promise<DataSchema.Course[]> {
         return await this.database.model<DataSchema.Course, DataSchema.CourseModel>(DataSchema.COURSES)
-            .where('originalId').in(courseIds)
+            .where('id').in(courseIds)
             .exec();
     }
 
     public async getVideosById(id: string): Promise<DataSchema.Video[]> {
         return await this.database.model<DataSchema.Video, DataSchema.VideoModel>(DataSchema.VIDEOS)
-            .where('originalId').equals(id)
+            .where('id').equals(id)
             .exec();
     }
 
     public async getVideosByList(courseId: string, videoIds: string[]): Promise<DataSchema.Video[]> {
         return await this.database.model<DataSchema.Video, DataSchema.VideoModel>(DataSchema.VIDEOS)
-            .where('originalId').in(videoIds)
+            .where('id').in(videoIds)
             .exec();
     }
 
@@ -181,7 +181,7 @@ export class DataController {
 
     public async getUsersById(id: string): Promise<DataSchema.User[]> {
         return await this.database.model<DataSchema.User, DataSchema.UserModel>(DataSchema.USERS)
-            .where('originalId').equals(id)
+            .where('id').equals(id)
             .exec();
     }
 
@@ -194,7 +194,7 @@ export class DataController {
     public async getUsersByList(userIds: string[]): Promise<DataSchema.User[]> {
         // console.info('The first user is', await this.getAllUsers());
         return await this.database.model<DataSchema.User, DataSchema.UserModel>(DataSchema.USERS)
-            .where('originalId').in(userIds)
+            .where('id').in(userIds)
             .exec();
     }
 

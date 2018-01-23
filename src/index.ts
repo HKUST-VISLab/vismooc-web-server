@@ -7,13 +7,8 @@ export default async function main() {
     // Save your local vars in .env for testing. DO NOT VERSION CONTROL `.env`!.
     // if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") require("dotenv").config();
     await initAll();
-
-    /**
-     * Get port from environment and store in Express.
-     */
-    // const app = Server();
-    // const port = CONFIG.port;
     const server = Server(CONFIG);
+
     /**
      * Listen on provided port, on all network interfaces.
      */

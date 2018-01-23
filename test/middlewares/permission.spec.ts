@@ -1,6 +1,7 @@
 import test from 'ava';
 import * as Koa from 'koa';
 import * as mongoose from 'mongoose';
+import { Logger, transports } from 'winston';
 import DataSchema from '../../src/database/dataSchema';
 import Permission from '../../src/middlewares/permission';
 import { MockReq, MockRes } from '../testUtils';
@@ -13,7 +14,7 @@ interface TestContext {
 
 const username = 'testUser';
 const mockUsers = [{
-    originalId: '123',
+    id: '123',
     username,
     name: 'wqer',
     language: 'en',
@@ -44,7 +45,15 @@ test.after('drop database', async (t) => {
 
 test.beforeEach('init app and ctx', (t) => {
     const app: Koa = new Koa();
+    // loger
+    app.context.logger = new Logger({
+        level: 'debug',
+        transports: [
+            new (transports.Console)(),
+        ],
+    });
     const ctx = app.createContext(new MockReq(), new MockRes());
+
     t.context = {
         app,
         ctx,
@@ -82,5 +91,6 @@ test('permission#use', async (t) => {
     // (ctx as any).session.passport.user = { username };
     // middleware(ctx, next);
     // t.is(nextCount, 5, "should call next once if no session.passport.user is founded");
-    // t.deepEqual(ctx.session.passport.user.permission, permission, "the permission should be set based on courseRole");
+    // t.deepEqual(ctx.session.passport.user.permission, permission,
+    // "the permission should be set based on courseRole");
 });

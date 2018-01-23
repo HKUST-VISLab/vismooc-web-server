@@ -4,15 +4,15 @@ export abstract class BaseDatabase {
         return this.type;
     }
 
-    public get Host(): string{
+    public get Host(): string {
         return this.host;
     }
 
-    public get Port(): number{
+    public get Port(): number {
         return this.port;
     }
 
-    public get Name(): string{
+    public get Name(): string {
         return this.name;
     }
 
