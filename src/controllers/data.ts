@@ -7,20 +7,16 @@ import { MongoDatabase } from '../database/mongo';
 /*-----------------Mongo----------------*/
 export class DataController {
 
-    public getCourseById = async (id) => this.getCoursesById(id)
-        .then(this.firstElement) as (id: string) => Promise<DataSchema.Course>;
-    public getVideoById = async (id) => this.getVideosById(id)
-        .then(this.firstElement) as (id: string) => Promise<DataSchema.Video>;
-    public getUserById = async (id) => this.getUsersById(id)
-        .then(this.firstElement) as (id: string) => Promise<DataSchema.User>;
-    public getUserByUsername = async (username) => this.getUsersByUsername(username)
-        .then(this.firstElement) as (username: string) => Promise<DataSchema.User>;
-
     constructor(private database: MongoDatabase) {
         if (!database) {
             throw new Error(`The database should not be ${database}`);
         }
     }
+
+    public getCourseById = async (id) => this.getCoursesById(id).then(this.firstElement);
+    public getVideoById = async (id) => this.getVideosById(id).then(this.firstElement);
+    public getUserById = async (id) => this.getUsersById(id).then(this.firstElement);
+    public getUserByUsername = async (username) => this.getUsersByUsername(username).then(this.firstElement);
 
     public async getSentimentById(courseId: string): Promise<DataSchema.Forum[]> {
         return await this.database.model<DataSchema.Forum, DataSchema.ForumModel>(DataSchema.FORUM)
@@ -83,8 +79,9 @@ export class DataController {
         const course = await this.getCourseById(courseId);
         const grades = course.grades;
         const ret = new Map<string, number>();
-        if (grades)
+        if (grades) {
             Object.keys(grades).forEach(d => ret.set(d, grades[d]));
+        }
         return ret;
     }
 

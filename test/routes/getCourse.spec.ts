@@ -25,6 +25,7 @@ const mockCourseData: DataSchema.Course[] = [
         ],
         endDate: 0, studentIds: ['83', '3', '5', '432', '342'], org: 'HKPOLYU',
         id: 'HKPOLYU+IL1001+2016_Q4_R0',
+        originalId: 'HKPOLYU+IL1001+2016_Q4_R0',
         startDate: 1893474000, description: 'NULL', enrollmentStart: null, status: null, year: null,
         url: null, grades: { 236: 100, 37: 95, 951: 15, 40: 70 },
     },
@@ -165,7 +166,10 @@ test('CourseRouter#getCourseInfo', async (t) => {
             temporalHotness: v.temporalHotness,
         }));
     const groundTruth = JSON.parse(JSON.stringify({
+        username: null,
+        course: {
         id: groundTruthCourse.id,
+        originalId: groundTruthCourse.originalId,
         name: groundTruthCourse.name,
         instructor: groundTruthCourse.instructor,
         url: groundTruthCourse.url,
@@ -174,7 +178,7 @@ test('CourseRouter#getCourseInfo', async (t) => {
         endDate: groundTruthCourse.endDate,
         videos: groundTruthVideos,
         description: groundTruthCourse.description,
-    }));
+    }}));
     t.deepEqual(output, groundTruth, 'the output should be equal to the groundTruth');
 });
 
@@ -184,6 +188,7 @@ test('CourseRouter#getCourseList', async (t) => {
     const courseIds = ['HKPOLYU+IL1001+2016_Q4_R0'];
     const convertCourse = (c) => ({
         id: c.id,
+        originalId: c.originalId,
         name: c.name,
         year: c.year,
         startDate: c.startDate,

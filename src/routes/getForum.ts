@@ -30,7 +30,7 @@ const getForumRouters: Router = new Router()
             await ctx.dataController.getSentimentById(courseId);
         ctx.body = forumData.map(d => ({
             courseId,
-            hashId: crypto.createHash('md5').update(d.id).digest('hex'),
+            hashId: crypto.createHash('md5').update(d.courseId).digest('hex'),
             day: 1 + Math.floor((d.createdAt - startDate) / (86400 * 1000)),
             sentiment: d.sentiment,
             timestamp: d.createdAt,

@@ -2,7 +2,7 @@ import { Document, Schema } from 'mongoose';
 
 /*------------------Course------------------ */
 export interface Course {
-    id: string;
+    id?: string;
     originalId: string;
     name: string;
     year: string;
@@ -46,7 +46,7 @@ export const CourseSchema = new Schema({
 
 /*------------------User------------------ */
 export interface User {
-    id: string;
+    id?: string;
     username: string;
     name: string;
     language: string;
@@ -98,7 +98,7 @@ export const EnrollmentSchema = new Schema({
 
 /*------------------Video------------------ */
 export interface Video {
-    id: string;
+    id?: string;
     name: string;
     temporalHotness: { [courseId: string]: { [date: string]: { [userId: string]: number } } } | object;
     section: string;
@@ -124,7 +124,7 @@ export const VideoSchema = new Schema({
 
 /*------------------forum------------------ */
 export interface Forum {
-    id: string;
+    id?: string;
     authorId: string;
     courseId: string;
     createdAt: number;

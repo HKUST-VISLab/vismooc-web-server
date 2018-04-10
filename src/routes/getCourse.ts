@@ -52,17 +52,25 @@ const getCourseRouters: Router = new Router()
                 };
             });
 
+        let username = null;
+        if (ctx.session && ctx.session.passport && ctx.session.passport.user) {
+            username = ctx.session.passport.user.username;
+        }
+
         ctx.body = course && {
-            id: course.id,
-            originalId: course.originalId,
-            name: course.name,
-            instructor: course.instructor,
-            url: course.url,
-            image: course.courseImageUrl,
-            startDate: +course.startDate,
-            endDate: +course.endDate,
-            videos,
-            description: course.description,
+            username,
+            course: {
+                id: course.id,
+                originalId: course.originalId,
+                name: course.name,
+                instructor: course.instructor,
+                url: course.url,
+                image: course.courseImageUrl,
+                startDate: +course.startDate,
+                endDate: +course.endDate,
+                videos,
+                description: course.description,
+            },
         };
         ctx.logger.debug(`the res.body.id is:${ctx.body.id}`);
         ctx.logger.debug(`the res.body.name is:${ctx.body.name}`);
