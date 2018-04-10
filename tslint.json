@@ -22,14 +22,23 @@
         ],
         "triple-equals": true,
         "max-classes-per-file": [
-            true, 5
+            true,
+            5
         ],
         "interface-name": [
             false
         ],
         "arrow-parens": false,
         "quotemark": [
-            true, "single", "jsx-double"
+            true,
+            "single",
+            "jsx-double"
+        ],
+        "no-shadowed-variable": [
+            true,
+            {
+                "interface": false
+            }
         ]
     }
 }
