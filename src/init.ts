@@ -7,7 +7,7 @@ export let CONFIG = {
     subPath: '',
     mongo: {
         host: 'localhost',
-        name: 'testVismoocElearning',
+        name: 'test-vismooc',
         port: 27017,
     },
     redis: {

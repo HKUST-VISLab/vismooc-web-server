@@ -21,7 +21,9 @@ export interface Course {
     grades: { [key: string]: number };
     metaInfo: string;
 }
-export interface CourseModel extends Course, Document { }
+export interface CourseModel extends Course, Document {
+    id?: string;
+}
 export const COURSES = 'courses';
 export const CourseSchema = new Schema({
     id: String,
@@ -61,7 +63,9 @@ export interface User {
     courseIds: string[];
     droppedCourseIds: string[];
 }
-export interface UserModel extends User, Document { }
+export interface UserModel extends User, Document {
+    id?: string;
+}
 export const USERS = 'users';
 export const UserSchema = new Schema({
     id: String,
@@ -108,7 +112,9 @@ export interface Video {
     duration: number;
     metaInfo?: object;
 }
-export interface VideoModel extends Video, Document { }
+export interface VideoModel extends Video, Document {
+    id?: string;
+}
 export const VIDEOS = 'videos';
 export const VideoSchema = new Schema({
     id: String,
@@ -137,7 +143,9 @@ export interface Forum {
     commentThreadId: string;
     parentId: string;
 }
-export interface ForumModel extends Forum, Document { }
+export interface ForumModel extends Forum, Document {
+    id?: string;
+}
 export const FORUM = 'forumthreads';
 export const ForumSchema = new Schema({
     authorId: String,

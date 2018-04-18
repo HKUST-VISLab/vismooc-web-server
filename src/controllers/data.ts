@@ -159,6 +159,11 @@ export class DataController {
             .exec();
     }
 
+    public async getAllCourses(courseIds: string[]): Promise<DataSchema.Course[]> {
+        return await this.database.model<DataSchema.Course, DataSchema.CourseModel>(DataSchema.COURSES)
+            .all();
+    }
+
     public async getVideosById(id: string): Promise<DataSchema.Video[]> {
         return await this.database.model<DataSchema.Video, DataSchema.VideoModel>(DataSchema.VIDEOS)
             .where('id').equals(id)

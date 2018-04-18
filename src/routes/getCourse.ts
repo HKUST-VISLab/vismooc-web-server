@@ -102,7 +102,7 @@ const getCourseRouters: Router = new Router()
         ctx.logger.debug(`The permissions of ${username} is:`);
         ctx.logger.debug(JSON.stringify(permissions));
 
-        const ret = await ctx.dataController.getCoursesByList(Object.keys(permissions));
+        const ret = await ctx.dataController.getAllCourses();
         ctx.body = {
             username,
             coursesList: ret.map((course) => ({
@@ -134,7 +134,7 @@ const getCourseRouters: Router = new Router()
         const students = await ctx.dataController.getUsersByList(studentIds);
         const countryDist = new Map<string, number>();
         for (const student of students) {
-            const country = student.country || 'CHN';
+            const country = student.country || 'UnKnown';
             if (!(country in countryDist)) {
                 countryDist[country] = { users: [], count: 0 };
             }

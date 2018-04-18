@@ -38,7 +38,13 @@ const getVideoRouters: Router = new Router()
         let logs: any[] = await ctx.dataController.getDenselogsById(courseId, videoId);
         logs = logs.filter((d) => (!startDateBound || d.timestamp >= startDateBound) &&
             (!endDateBound || d.timestamp <= endDateBound));
+        const duration = Math.max(...logs.map(d => Math.max(...
+                d.clicks.map(e => e.currentTime || 0))));
+        console.warn(duration);
         for (const denselog of logs) {
+            denselog.clicks = denselog.clicks.filter(
+                d => !d.currentTime || (d.currentTime >= 3 && d.currentTime < duration - 5),
+            );
             for (const click of denselog.clicks) {
                 delete click.path;
                 if (click.userId) {
